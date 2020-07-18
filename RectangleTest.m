@@ -32,8 +32,8 @@ function RectangleTest(tissueWidth, numFrames, totalStrainPercent, poissonRatio,
      
     %create initial boxes
     for i = 1:length(boxes)
-        boxes(i,1) =  startX + inc;        %x loc based off box to the left of it
-        boxes(i,2) =  startY;                          %y loc
+        boxes(i,1) =  startX + inc;                 %x loc
+        boxes(i,2) =  startY;                       %y loc
         boxes(i,3) =  pix;                          %width
         boxes(i,4) =  pix;                          %height
         rectangle('Position', boxes(i,:));
@@ -50,7 +50,7 @@ function RectangleTest(tissueWidth, numFrames, totalStrainPercent, poissonRatio,
     if(gripSide == 0) 
         for i = 1:(numFrames)
             for j = 2:length(boxes) %assume left most box doesnt deform       
-                boxes(j,1) =  boxes(j-1,3) + boxes(j-1,1) + startX;  %new xloc
+                boxes(j,1) =  boxes(j-1,3) + boxes(j-1,1);  %new xloc
                 boxes(j,3) =  boxes(j,3) + displacement(j,1); %new width
                
             end
@@ -75,7 +75,7 @@ function RectangleTest(tissueWidth, numFrames, totalStrainPercent, poissonRatio,
            for i = 1:(numFrames)
                 for j = (length(boxes)-1):-1:1 %assume right most box doesn't deform
                     boxes(j,3) =  boxes(j,3) + displacement(j,1);  %new width
-                    boxes(j,1) =   boxes(j+1,1) - boxes(j,3) + startX;  %update x loc (changes with new width now x is always lower left)
+                    boxes(j,1) =   boxes(j+1,1) - boxes(j,3);  %update x loc (changes with new width now x is always lower left)
                     
                 end
                 
