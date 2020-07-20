@@ -1,28 +1,30 @@
+%Calculates the displacement of a row of bins according to a given
+%distribution function. The function returns an array of the displacement
+%per frame of each bin in the row
+
 function displacement = calcBinIncrement(numBoxesInRow, totalDeformation, numFrames)
 
-     averageDisplacement = double(totalDeformation) / double(numBoxesInRow);
- 
-    weightingFunction = @(binNum) averageDisplacement / double(binNum);
-
+    %we want x-intercept at x = 1 so the first bin will always be 0
+    distributionFunc = @(binNum) 0.5 * (binNum - 1);
   
 
-    displacement = averageDisplacement*ones(numBoxesInRow,1);
+    displacement = zeros(numBoxesInRow,1);
    
-    %start the array as an even distribution where each valuye is the average displacement e.g. :  1 1 1 1 1
-    %then take from the left and add to the right so that the sum remains the
-    %same e.g 0 0.5 1 1.5 2  --> sum is still 5
-
-
 
     %this will be the displacement for each box in the row per frame
-    for i = 1: fix(numBoxesInRow / 2) %if odd middle one is ignored so it doesn't matter that we skip it
-
-       original = displacement(i,1);
-       weight = weightingFunction(i);
-
-       displacement(numBoxesInRow - i + 1) =  (displacement(i,1) + weight ) / double(numFrames);  %element mirrored in array from disp(i)
-       displacement(i,1) = double(original - weight)/ double(numFrames);
+    for i = 1:numBoxesInRow 
+        displacement(i,1) = distributionFunc(i);  %initialize displacement value      
     end
+    
+    total = sum(displacement(:,1));
+    
+    for i = 1:numBoxesInRow
+        displacement(i,1) = displacement(i,1) / double(total);      %change value to percentange
+        displacement(i,1) = displacement(i,1) * totalDeformation;   %scale so sum of deformations adds to correct total
+        displacement(i,1) = displacement(i,1) / numFrames;          %change to be displacement per frame
+    end
+    
+    
     
     return;
 

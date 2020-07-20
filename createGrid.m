@@ -1,29 +1,28 @@
-%iterates through the array of positive boxes and counts how many are
-%positive ...can't use sum(A,dim) because the array is 1D despite the boxes
-%being 2D
+%iterates through the array of positive boxes and places them into a cell
+%array such that the number in each row of the cell array matches the real
+%grid
 
-function positiveCountByRow = createGrid (posBoxArray)
+function posBoxCellArray =  createGrid (posBoxArray)
 
 
-positiveCountByRow = [];
-k = 1;
-count = 0;
+    posBoxCellArray = {};
+    row = 1;
+    elementsInRow = 1;
+    posBoxCellArray{1,1} = posBoxArray(1,1:4); %first one will always be first in cell array also
+
 
     for i = 1:length(posBoxArray)
         
         if(i > 1)
             if(posBoxArray(i , 2) < posBoxArray(i-1 , 2) || posBoxArray(i , 2) > posBoxArray(i-1 , 2))  %this will break if height changes across a row
-               k = k + 1;
-               count = 0;
+               row = row + 1;
+               elementsInRow = 1;
             end
         end
         
-        
-        count = count + 1;
-        positiveCountByRow(k) = count;
-        
-       
-  
+         posBoxCellArray{row, elementsInRow} = posBoxArray(i,1:4);
+        elementsInRow = elementsInRow + 1;      
+
     end
 
     return;
