@@ -1,7 +1,9 @@
-function strainApproximation(posBoxArray, tissueWidth, numFrames, strainPercent)
+function deformedCellArray = strainApproximation(posBoxArray, clampInfo)
 
     posBoxCellArray = createGrid(posBoxArray); %organize box elements by row
-   
+    deformedCellArray = {};
+    
+    
     sizeArray = size(posBoxCellArray);
     maxI = sizeArray(1);
     maxJ = sizeArray(2);
@@ -28,13 +30,16 @@ function strainApproximation(posBoxArray, tissueWidth, numFrames, strainPercent)
     switch(forceLocation)
         case 1
             fixedX = initialMinX;
+            %deformedCellArray = deformLeft(posBoxCellArray, maxRowLength);
         case 2
             fixedX = initialMaxX;
+            %deformedCellArray = deformRight(posBoxCellArray, maxRowLength); %just mirror of deformLeft()
         case 3
-             fixedX = findFixed(posBoxCellArray(:,:,1));  
+            fixedX = findFixed(posBoxCellArray(:,:,1),initialMinX, initialMaxX);  
+            %deformedCellArray = deformBoth(fixedX, initialMinX, maxRowLength);
         otherwise
     end
     
     
-    
+    return
 end

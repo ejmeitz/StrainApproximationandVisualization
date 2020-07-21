@@ -64,12 +64,13 @@ gripSide = 0;
                 startX = posBoxCellArray{i,1}(1);  %first x-val is different for every row
                 for j = 1:maxJ  %cols
                        if(~isempty(boxes{i,j}))
-                            boxes{i,j}(1) =  startX + totalWidth;
+                            boxes{i,j}(1) =  startX + totalWidth; %if theres a gap this breaks FIX
+                           
                             boxes{i,j}(3) =  boxes{i,j}(3) + displacement(j,1); %new width
 
                             totalWidth = totalWidth + boxes{i,j}(3);  %this definition breaks on gaps FIX that
                             
-                            //TO DO
+                     
                        end
                 end
             end

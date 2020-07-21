@@ -3,11 +3,14 @@
 %initial width of a box
 
 %returns the x-coord of the central box  (maybe make it return the index??)
-function fixedX = findFixed (firstFrameAsCellArray)
+function fixedX = findFixed (firstFrameAsCellArray, minX, maxX)
 
     sizeArray = size(firstFrameAsCellArray);
     maxI = sizeArray(1);
     maxJ = sizeArray(2);
+    
+    fixedX = minX; %this should be the furthest to the left x in the image
+    initialBoxWidth = firstFrameAsCellArray{1,1}(3);  %3 value in sub array is width
     
      temp = figure(1);
          %draw first frame
@@ -22,19 +25,16 @@ function fixedX = findFixed (firstFrameAsCellArray)
     title("Click the fixed point");
     coordinates_input = ginput(1);
     x = round(coordinates_input(1));
-    y = round(coordinates_input(2));
-    close(temp);
-
-   
-    startX = getMinX(firstFrameAsCellArray); 
-    fixedX = startX; %this should be the furthest to the left x in the image
-    initialBoxWidth = firstFrameAsCellArray{1,1}(3);  %3 value in sub array is width
+    %y = round(coordinates_input(2));
     
-    
-    if(x < startX)
-        error("You picked a point to the left of the gel region");
+    while(x > maxX || x < minX)
+        warning("You picked a point to the outside of the gel region");
+        coordinates_input = ginput(1);
+        x = round(coordinates_input(1));
     end
-
+    
+    close(temp);
+   
     %this will break once we reach the point and i will match the edge of the
     %next box to the right of the point
       while(fixedX < x)

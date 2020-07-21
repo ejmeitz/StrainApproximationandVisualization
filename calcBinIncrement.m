@@ -21,7 +21,7 @@ function displacement = calcBinIncrement(numBoxesInRow, totalDeformation, numFra
     for i = 1:numBoxesInRow
         displacement(i,1) = displacement(i,1) / double(total);      %change value to percentange
         displacement(i,1) = displacement(i,1) * totalDeformation;   %scale so sum of deformations adds to correct total
-        displacement(i,1) = displacement(i,1) / numFrames;          %change to be displacement per frame
+       % displacement(i,1) = displacement(i,1) / numFrames;          %change to be displacement per frame
     end
     
     
