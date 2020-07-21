@@ -1,0 +1,27 @@
+function strainApproximation(posBoxArray, tissueWidth, numFrames, strainPercent)
+
+    maxRowLength = getLongestRowFromCellArray(posBoxCellArray); %get longest row to create displacement values from
+    
+    posBoxCellArray = createGrid(posBoxArray); %organize box elements by row
+    
+    
+    
+    figure(1);
+    
+         %draw all boxes
+             for m = 1:maxI
+                  for n = 1:maxJ
+                        if(~isempty(boxes{m,n}))
+                             rectangle('Position', boxes{m,n});
+                        end
+                  end
+             end
+    
+    coordinates_input = ginput(1)
+    row = round(coordinates_input(2));
+    column = round(coordinates_input(1));
+
+
+
+
+end

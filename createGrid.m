@@ -6,24 +6,24 @@ function posBoxCellArray =  createGrid (posBoxArray)
 
 
     posBoxCellArray = {};
-    row = 1;
-    elementsInRow = 1;
-    posBoxCellArray{1,1} = posBoxArray(1,1:4); %first one will always be first in cell array also
 
+    for j = 1:size(posBoxArray,3)
+         row = 1;
+        elementsInRow = 1;
+        for i = 1:length(posBoxArray)
 
-    for i = 1:length(posBoxArray)
-        
-        if(i > 1)
-            if(posBoxArray(i , 2) < posBoxArray(i-1 , 2) || posBoxArray(i , 2) > posBoxArray(i-1 , 2))  %this will break if height changes across a row
-               row = row + 1;
-               elementsInRow = 1;
+            if(i > 1)
+                if(posBoxArray(i , 2, j) < posBoxArray(i-1 , 2, j) || posBoxArray(i , 2, j) > posBoxArray(i-1 , 2, j))  %this will break if height changes across a row
+                   row = row + 1;
+                   elementsInRow = 1;
+                end
             end
+
+            posBoxCellArray{row, elementsInRow, j} = posBoxArray(i, 1:4, j);
+            elementsInRow = elementsInRow + 1;      
+
         end
-        
-         posBoxCellArray{row, elementsInRow} = posBoxArray(i,1:4);
-        elementsInRow = elementsInRow + 1;      
-
     end
-
+    
     return;
 end

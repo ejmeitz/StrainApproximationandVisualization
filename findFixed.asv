@@ -5,7 +5,7 @@
 %returns the x-coord of the central box  (maybe make it return the index??)
 function fixedX = findFixed (firstFrameAsCellArray)
 
-    sizeArray = size(firstFrameAsCellArray);
+    sizeArray = size(posBoxCellArray);
     maxI = sizeArray(1);
     maxJ = sizeArray(2);
     
@@ -24,13 +24,11 @@ function fixedX = findFixed (firstFrameAsCellArray)
     x = round(coordinates_input(1));
     y = round(coordinates_input(2));
     close(temp);
+    
 
-   
-    startX = getMinX(firstFrameAsCellArray); 
+    %probably a prettier way to do this (like with mod()) but this works 
     fixedX = startX; %this should be the furthest to the left x in the image
-    initialBoxWidth = firstFrameAsCellArray{1,1}(3);  %3 value in sub array is width
-    
-    
+
     if(x < startX)
         error("You picked a point to the left of the gel region");
     end
