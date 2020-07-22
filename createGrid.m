@@ -6,7 +6,7 @@ function posBoxCellArray =  createGrid (posBoxArray)
 
 
     posBoxCellArray = {};
-
+    h = waitbar(0,'Converting to Cell Array...');
     for j = 1:size(posBoxArray,3)
          row = 1;
         elementsInRow = 1;
@@ -23,7 +23,8 @@ function posBoxCellArray =  createGrid (posBoxArray)
             elementsInRow = elementsInRow + 1;      
 
         end
+        waitbar(j/size(posBoxArray,3));
     end
-    
+    close(h);
     return;
 end
