@@ -1,4 +1,4 @@
-function trackedCircleLocations = trackCircles  (s0, threshUp, threshDown, chosenCircles)
+function trackedCircleLocations = trackCircles  (s0, threshUp, threshDown, chosenCircles)  %this s0 is scaled by 500
 
     %these settings must match settings in "pickCircles.m"
     brushSize = 4;

@@ -15,25 +15,21 @@ function deformedCellArray = strainApproximation(posBoxArray, scaled_s0)
     initialMaxX = maxRowLength*initialBoxWidth + initialMinX;
     fixedX = 0;
    
-    %have user create mask and pick circles to track
     [chosenCircles, threshUp, threshDown] = pickCircles(scaled_s0);
-    %track those circles throughout the video
     trackedCircleLocations = trackCircles(scaled_s0, threshUp, threshDown, chosenCircles);
-    %figure out where force is applied based on those circles movements
-    forceLocation = deduceForceLocation(trackedCircleLocations);
+    forceLocation
     
     switch(forceLocation)
-        case 'right'
+        case 1
             fixedX = initialMinX;
-            deformedCellArray = deformLeft(posBoxCellArray, longestRowIndex, maxRowLength);
-        case 'left'
+            %deformedCellArray = deformLeft(posBoxCellArray, maxRowLength);
+        case 2
             fixedX = initialMaxX;
-            deformedCellArray = deformRight(posBoxCellArray, longestRowIndex, maxRowLength); %just mirror of deformLeft()
-        case 'both'
+            %deformedCellArray = deformRight(posBoxCellArray, maxRowLength); %just mirror of deformLeft()
+        case 3
             fixedX = findFixed(posBoxCellArray(:,:,1),initialMinX, initialMaxX);  
-            deformedCellArray = deformBoth(fixedX, initialMinX, longestRowIndex, maxRowLength);
+            %deformedCellArray = deformBoth(fixedX, initialMinX, maxRowLength);
         otherwise
-            error("Could not deform cells");
     end
     
     

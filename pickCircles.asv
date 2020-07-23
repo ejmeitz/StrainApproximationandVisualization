@@ -23,7 +23,7 @@ function [chosenCircles, threshUp, threshDown] = pickCircles(s0)    %scaled s0 b
       
  
    
-  %global vars break!!!!!
+  %STILL BREAKS WHEN change mask and then it wont open circle win again
     function pickCirclesUI(filled_img) 
         
       f = figure();
@@ -43,13 +43,14 @@ function [chosenCircles, threshUp, threshDown] = pickCircles(s0)    %scaled s0 b
     
     end
      
-  function buttonPushed(source, eventdata, fig) 
+  function buttonPushed(source, eventdata,fig) 
         close(fig);
         return;
   end
 
   function changeMask(source, eventdata,fig) 
         close(fig);
+        global threshUp threshDown;
         [threshUp,threshDown] = setThresh();
         return;
   end
