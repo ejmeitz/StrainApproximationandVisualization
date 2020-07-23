@@ -1,4 +1,4 @@
-function forceLocation = deduceForceLocation(trackedCircles)
+function [forceLocation, leftClampPos, rightClampPos] = deduceForceLocation(trackedCircles)
     
     forceLocation = 'both';
 
@@ -33,9 +33,9 @@ function forceLocation = deduceForceLocation(trackedCircles)
          forceLocation = 'left';
       end
       
-      if(range(rightClampPos <= 4) && range(leftClampPos) <= 4)
-        error("No movement detected");
-        forceLocation = 'error';
+      if(range(rightClampPos <= 4) && range(leftClampPos) <= 4) 
+        forceLocation = 'bug';
+        warning("No movement detected");
       end
       
     return;

@@ -10,75 +10,78 @@
 
 
 tissueWidth = 400;
-numFrames = 10;
+numFrames = size(deformedCellArray,3);
 totalStrainPercent = 50;
-isSingleGrip = true;
+%isSingleGrip = true;
 gripSide = 0;
 
 %function Test(tissueWidth, numFrames, totalStrainPercent, isSingleGrip, gripSide)
-    maxRowLength = getLongestRowFromCellArray(posBoxCellArray);
-    totalDeformation = (totalStrainPercent / 100) * tissueWidth; % under assumption totalStrainPercent is in form 2.5%
-    displacement = calcBinIncrement(maxRowLength, totalDeformation, numFrames);
+%    maxRowLength = getLongestRowFromCellArray(posBoxCellArray);
+    %totalDeformation = (totalStrainPercent / 100) * tissueWidth; % under assumption totalStrainPercent is in form 2.5%
+    %displacement = calcBinIncrement(maxRowLength, totalDeformation, numFrames);
 
     frames = [];
     clear('frames');
     
     f = figure(1); 
-     xlim([0 900]);
-     ylim([0 500]);
-    
-    %________________________
-    %need step to turn array into cell array suing createGrid
-    %___________________________
-     %   positiveCountByRow = createGrid(boxes);  %creates an array that has the total number of boxes in each row
-     
-     
-    boxes = posBoxCellArray;  %y dim is the information associated with each box
+   xlim([308 325]);
+     ylim([240 250]);
     
 
     sizeArray = size(posBoxCellArray);
     maxI = sizeArray(1);
     maxJ = sizeArray(2);
     
+    
+    abc = waitbar(0,'Drawing boxes...');
     %when true grip is pulling on the right
     if(gripSide == 0) 
-        for h = 1:numFrames
-            
+        count = 1;
+        for h = 200:(numFrames-100)
+           
               %draw all boxes
-             for m = 1:maxI
-                  for n = 1:maxJ
-                        if(~isempty(boxes{m,n}))
-                             rectangle('Position', boxes{m,n});
+           % for m = 1:maxI
+                %  for n = 1:maxJ
+                        if(~isempty(deformedCellArray{29,1,h}))
+                             rectangle('Position', deformedCellArray{29,1,h}(1:4));
+                             
                         end
-                  end
-             end
+                        if(~isempty(deformedCellArray{29,2,h}))
+                             rectangle('Position', deformedCellArray{29,2,h}(1:4));
+                             
+                        end
+               %  end
+            % end
              
-            xlim([0 900]);
-            ylim([0 500]);
-               
-            frames(h) = getframe(f);  %add frame to array
+              xlim([308 325]);
+     ylim([240 250]);
+     
+    
+            frames(count) = getframe(f);  %add frame to array
             clf(f);  %clear figure 
-       
-            for i = 1:maxI  %rows
-                totalWidth = 0;  %on the start of a new row reset this
-                startX = posBoxCellArray{i,1}(1);  %first x-val is different for every row
-                for j = 1:maxJ  %cols
-                       if(~isempty(boxes{i,j}))
-                            boxes{i,j}(1) =  startX + totalWidth; %if theres a gap this breaks FIX
-                           
-                            boxes{i,j}(3) =  boxes{i,j}(3) + displacement(j,1); %new width
-
-                            totalWidth = totalWidth + boxes{i,j}(3);  %this definition breaks on gaps FIX that
-                            
-                     
-                       end
-                end
-            end
+             waitbar(count/(numFrames-300));
+             count = count + 1;
+%             for i = 1:maxI  %rows
+%                 totalWidth = 0;  %on the start of a new row reset this
+%                 startX = posBoxCellArray{i,1}(1);  %first x-val is different for every row
+%                 for j = 1:maxJ  %cols
+%                        if(~isempty(boxes{i,j}))
+%                             boxes{i,j}(1) =  startX + totalWidth; %if theres a gap this breaks FIX
+%                            
+%                             boxes{i,j}(3) =  boxes{i,j}(3) + displacement(j,1); %new width
+% 
+%                             totalWidth = totalWidth + boxes{i,j}(3);  %this definition breaks on gaps FIX that
+%                             
+%                      
+%                        end
+%                 end
+%             end
                        
              
         end
     end
-    
+    close(f);
+    close(abc);
    
     %when grip is pulling from left
 %     if(gripSide == 1)
@@ -137,5 +140,5 @@ gripSide = 0;
 %     end
     
     set(gca,'visible','off')
-    movie(frames,100,10); %play movie x times at y fps
+    movie(frames,1000,20); %play movie x times at y fps
 %end

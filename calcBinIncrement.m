@@ -1,8 +1,6 @@
-%Calculates the displacement of a row of bins according to a given
-%distribution function. The function returns an array of the displacement
-%per frame of each bin in the row
+%calculates the distribution of displacement for a frame
 
-function displacement = calcBinIncrement(numBoxesInRow, displacementArray)
+function displacement = calcBinIncrement(numBoxesInRow, totalDisplacement)
 
     %we want x-intercept at x = 1 so the first bin will always be 0
     distributionFunc = @(binNum) 0.5 * (binNum - 1);
@@ -19,11 +17,11 @@ function displacement = calcBinIncrement(numBoxesInRow, displacementArray)
     total = sum(displacement(:,1));
     
     for i = 1:numBoxesInRow
-        displacement(i,1) = displacement(i,1) / double(total);      %change value to percentange of total deformation
-        displacement(i,1) = displacement(i,1) * displacementArray(i,1);   %multiply percent by total displacement
+        displacement(i,1) = displacement(i,1) / double(total);      %change value to percentange of total deformation for that frame
+        displacement(i,1) = displacement(i,1) * totalDisplacement;   %multiply percent by total displacement for that frame
     end
     
-    
+     
     
     return;
 
