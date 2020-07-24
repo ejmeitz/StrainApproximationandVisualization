@@ -37,5 +37,5 @@ function deformedCellArray = strainApproximation(posBoxArray, scaled_s0)
     end
     
     
-    return
+    return;
 end

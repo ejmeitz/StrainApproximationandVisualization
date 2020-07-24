@@ -35,7 +35,11 @@ function deformedCellArray = deformBoth(posBoxCellArray, fixedX, maxRowLength, l
         countLeft = 1;
          
          for k = 1 : size(posBoxCellArray,1) %loop through each row and apply the displacement
+             temp = posBoxCellArray{k,1,j}(1);
+             numBoxOnLeft = (fixedX - temp)/initialBoxWidth;
              for h = 1 : size(posBoxCellArray,2) 
+                 
+          
                  
                 if(~isempty(posBoxCellArray{k,h,j})) %if empty skip
                     if(posBoxCellArray{k,h,j}(1) >= fixedX) %if to right of fixed
@@ -43,19 +47,16 @@ function deformedCellArray = deformBoth(posBoxCellArray, fixedX, maxRowLength, l
                              deformedCellArray{k,h,j}(3) =  deformedCellArray{k,h,j}(3) + displacementRight(countRight,1);    %update width
                              countRight = countRight + 1;
                     else %if to left of fixed
-                            deformedCellArray{k,h,j}(1) =  deformedCellArray{k,h,j}(1) - sum(displacementLeft(countLeft:(size(displacementLeft,1)),1));  %update xloc
-                            deformedCellArray{k,h,j}(3) =  deformedCellArray{k,h,j}(3) + displacementLeft(countLeft,1);    %update width
+                            deformedCellArray{k,h,j}(1) =  deformedCellArray{k,h,j}(1) - sum(displacementLeft(countLeft:numBoxOnLeft,1));  %update xloc
+                            deformedCellArray{k,h,j}(3) =  deformedCellArray{k,h,j}(3) + displacementLeft(countLeft, 1);    %update width
                             countLeft = countLeft + 1;
-                            h
                     end
                  end 
                  
              end
-             k
-             countRight = 1; %at start of new row reset this
+             countRight = 1; %at start of new row reset counts
              countLeft = 1;
          end
-         j
       end
 
       
