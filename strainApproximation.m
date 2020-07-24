@@ -31,7 +31,7 @@ function deformedCellArray = strainApproximation(posBoxArray, scaled_s0)
             deformedCellArray = deformLeft(posBoxCellArray, longestRowIndex, maxRowLength, leftClampPos); %just mirror of deformLeft()
         case 'both'
             fixedX = findFixed(posBoxCellArray(:,:,1),initialMinX, initialMaxX);  
-            deformedCellArray = deformBoth(fixedX, initialMinX, longestRowIndex, maxRowLength , leftClampPos, rightClampPos);
+            deformedCellArray = deformBoth(posBoxCellArray, fixedX, maxRowLength, leftClampPos, rightClampPos);
         otherwise
             error("Could not deform cells");
     end

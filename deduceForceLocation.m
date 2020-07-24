@@ -10,6 +10,7 @@ function [forceLocation, leftClampPos, rightClampPos] = deduceForceLocation(trac
         xlocs1(i,1) = trackedCircles(1,1,i);
         xlocs2(i,1) = trackedCircles(2,1,i);    
     end
+    
         
     %figure out which clamp is the left/right
       leftClampPos = [];

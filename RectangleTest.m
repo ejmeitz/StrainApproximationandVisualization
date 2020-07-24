@@ -24,7 +24,7 @@ gripSide = 0;
     clear('frames');
     
     f = figure(1); 
-    xlim([308 700]);
+    xlim([300 700]);
     ylim([50 500]);
    
     sizeArray = size(posBoxCellArray);
@@ -61,7 +61,7 @@ gripSide = 0;
                 end
             end
              
-              xlim([308 700]);
+              xlim([300 700]);
     ylim([50 500]);
    
      
