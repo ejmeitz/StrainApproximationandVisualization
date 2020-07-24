@@ -15,12 +15,12 @@ function deformedCellArray = deformRight(posBoxCellArray, longestRowIndex, maxRo
          for k = 1:size(posBoxCellArray,1) %loop through each row and apply the displacement
              for h = 2:size(posBoxCellArray,2) %first box always has 0 deformation
                  if(~isempty(posBoxCellArray{k,h,j}))
-                     deformedCellArray{k,h,j}(1) =  deformedCellArray{k,h,j-1}(1) + displacement(h-1,1);  %update xloc
-                     deformedCellArray{k,h,j}(3) =  deformedCellArray{k,h,j-1}(3) + displacement(h,1);    %update width
+                    % deformedCellArray{k,h,j}(1) =  deformedCellArray{k,h,j}(1) + sum(displacement(h-1:size(posBoxCellArray,2),1));  %update xloc
+                      deformedCellArray{k,h,j}(1) =  deformedCellArray{k,h,j}(1) + sum(displacement(2:h-1));  %update xloc
+                     deformedCellArray{k,h,j}(3) =  deformedCellArray{k,h,j}(3) + displacement(h,1);    %update width
                  end
              end
          end
-         
       end
 
 

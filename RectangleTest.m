@@ -24,10 +24,9 @@ gripSide = 0;
     clear('frames');
     
     f = figure(1); 
-   xlim([308 325]);
-     ylim([240 250]);
-    
-
+    xlim([308 700]);
+    ylim([50 500]);
+   
     sizeArray = size(posBoxCellArray);
     maxI = sizeArray(1);
     maxJ = sizeArray(2);
@@ -42,19 +41,29 @@ gripSide = 0;
               %draw all boxes
            % for m = 1:maxI
                 %  for n = 1:maxJ
-                        if(~isempty(deformedCellArray{29,1,h}))
-                             rectangle('Position', deformedCellArray{29,1,h}(1:4));
-                             
-                        end
-                        if(~isempty(deformedCellArray{29,2,h}))
-                             rectangle('Position', deformedCellArray{29,2,h}(1:4));
-                             
-                        end
+%                         if(~isempty(deformedCellArray{29,1,h}))
+%                              rectangle('Position', deformedCellArray{29,1,h}(1:4));
+%                              
+%                         end
+%                         if(~isempty(deformedCellArray{29,2,h}))
+%                              rectangle('Position', deformedCellArray{29,2,h}(1:4));
+%                              
+%                         end
                %  end
             % end
+            
+             for m = 1:maxI
+                 for n = 1:maxJ
+                        if(~isempty(deformedCellArray{m,n,h}))
+                             rectangle('Position', deformedCellArray{m,n,h}(1:4));
+                             
+                        end
+                end
+            end
              
-              xlim([308 325]);
-     ylim([240 250]);
+              xlim([308 700]);
+    ylim([50 500]);
+   
      
     
             frames(count) = getframe(f);  %add frame to array
