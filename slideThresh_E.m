@@ -1,4 +1,4 @@
-function [x, y] = slideThresh(photo)
+function [x, y] = slideThresh_E(photo)
 
 sThresh = photo;
 FigH = figure('Position', [ 0 0 800 700 ]);

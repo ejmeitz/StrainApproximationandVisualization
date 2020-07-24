@@ -84,7 +84,7 @@ function [chosenCircles, threshUp, threshDown] = pickCircles(s0)    %scaled s0 b
 
     function [threshUp, threshDown] =  setThresh()
        
-       [threshUp, threshDown] =  slideThresh(Iobr);
+       [threshUp, threshDown] =  slideThresh_E(Iobr);
 
        %create the binary threshold img
        thresh_img = (Iobr<=threshUp) & (Iobr>=threshDown);

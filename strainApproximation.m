@@ -1,4 +1,4 @@
-function deformedCellArray = strainApproximation(posBoxArray, scaled_s0)
+function deformedPosBoxArray = strainApproximation(posBoxArray, scaled_s0)
 
     posBoxCellArray = createGrid(posBoxArray); %organize box elements by row
     deformedCellArray = {};
@@ -36,6 +36,8 @@ function deformedCellArray = strainApproximation(posBoxArray, scaled_s0)
             error("Could not deform cells");
     end
     
-    
+    allPosXLength = size(posBoxArray,1);
+    deformedPosBoxArray = cellArrayBackToArray(deformedCellArray, allPosXLength);
+    clear deformedCellArray trackedCircleLocations posBoxCellArray;
     return;
 end
