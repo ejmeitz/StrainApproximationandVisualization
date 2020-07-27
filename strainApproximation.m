@@ -24,11 +24,9 @@ function deformedPosBoxArray = strainApproximation(posBoxArray, scaled_s0)
     
     switch(forceLocation)
         case 'right'
-            fixedX = initialMinX;
-            deformedCellArray = deformRight(posBoxCellArray, longestRowIndex, maxRowLength, rightClampPos);
+            deformedCellArray = deformRight(posBoxCellArray, maxRowLength, rightClampPos);
         case 'left'
-            fixedX = initialMaxX;
-            deformedCellArray = deformLeft(posBoxCellArray, longestRowIndex, maxRowLength, leftClampPos); %just mirror of deformLeft()
+            deformedCellArray = deformLeft(posBoxCellArray, maxRowLength, leftClampPos); %just mirror of deformLeft()
         case 'both'
             fixedX = findFixed(posBoxCellArray(:,:,1),initialMinX, initialMaxX);  
             deformedCellArray = deformBoth(posBoxCellArray, fixedX, maxRowLength, leftClampPos, rightClampPos);

@@ -12,17 +12,15 @@ function [chosenCircles, threshUp, threshDown] = pickCircles(s0)    %scaled s0 b
     Iobr = imreconstruct(img_erode,img);
 
     chosenCircles  = zeros(2,2);
-   uiwait(msgbox('Adjust sliders until only the circular pins are visible','Marker Selection','modal'));
-
-
    
+
+
+       uiwait(msgbox('Adjust sliders until only the circular pins are visible','Marker Selection','modal'));
       %have user apply threshold 
       [threshUp,threshDown] = setThresh();
-      %apply circle alg to find circles in img
-      
+  
  
-   
-  %global vars break!!!!!
+  
     function pickCirclesUI(filled_img) 
         
       f = figure();

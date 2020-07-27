@@ -1,4 +1,4 @@
-function deformedCellArray = deformRight(posBoxCellArray, longestRowIndex, maxRowLength, rightClampPos)
+function deformedCellArray = deformRight(posBoxCellArray, maxRowLength, rightClampPos)
       deformedCellArray = posBoxCellArray;
        %1 = x loc  %2 = y loc  % 3 = width   %4 = width
       

@@ -7,9 +7,6 @@ function trackedCircleLocations = trackCircles  (s0, threshUp, threshDown, chose
     
     brush = strel('disk', brushSize);
 
-    
-  
-
     trackedCircleLocations = ones(2,2,size(s0,3));
     h = waitbar(0,'Tracking circles...');
     for i = 1:size(s0,3)

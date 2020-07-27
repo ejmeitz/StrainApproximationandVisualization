@@ -1,4 +1,4 @@
-function deformedCellArray = deformLeft(posBoxCellArray, longestRowIndex, maxRowLength, leftClampPos)
+function deformedCellArray = deformLeft(posBoxCellArray, maxRowLength, leftClampPos)
       deformedCellArray = posBoxCellArray;  %in final dont make a copy
        %1 = x loc  %2 = y loc  % 3 = width   %4 = width
       
