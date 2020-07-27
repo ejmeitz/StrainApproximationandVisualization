@@ -97,7 +97,7 @@ scale = 500;
        %value greater than 0
     for i = 1:numBox
       rectangle('Position', boxArray(i,1:4), 'EdgeColor', 'b');
-      subArray = binaryImage(boxArray(i,2):(boxArray(i,2)+boxArray(i,4)), boxArray(i,1):(boxArray(i,1)+boxArray(i,3)));
+      subArray = binaryImage(boxArray(i,2):(boxArray(i,2)+boxArray(i,4)-1), boxArray(i,1):(boxArray(i,1)+boxArray(i,3)-1));
       boxArray(i,5) = sum(subArray, 'all'); %if sum is 0 there is no gel
     end
 
@@ -125,15 +125,19 @@ scale = 500;
     disp('Mask Segmented');
 
     %% calculate the average baseline dolp and aop within each region
-    
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %WEIRDNESS HAPPENS SOMEWHERE FROM HERE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    h = waitbar(0,"Calculating subAoP and subDoLP");
     for j = 1:size(aop,3)
-            bDoLPMask = binaryImage.*dolp(:,:,j);  
-            bAoPMask = binaryImage.*aop(:,:,j);
+            bDoLPMask = binaryImage.*dolp(:,:,j);  %apply mask to dolp 
+            bAoPMask = binaryImage.*aop(:,:,j);  %apply mask to aop
         for i = 1:size(posBoxArray,1)
 
-            subDoLP = bDoLPMask(posBoxArray(i,2):(posBoxArray(i,2)+posBoxArray(i,4)), posBoxArray(i,1):(posBoxArray(i,1)+posBoxArray(i,3)));
-            allPosBoxArray(i,5,j) = mean(subDoLP, 'all'); 
-            subAoP = bAoPMask(posBoxArray(i,2):(posBoxArray(i,2)+posBoxArray(i,4)), posBoxArray(i,1):(posBoxArray(i,1)+posBoxArray(i,3)));
+            subDoLP = bDoLPMask(posBoxArray(i,2):(posBoxArray(i,2)+posBoxArray(i,4)-1), posBoxArray(i,1):(posBoxArray(i,1)+posBoxArray(i,3)-1)); %calc 5x5 subDoLP
+           % allPosBoxArray(i,5,j) = mean(subDoLP, 'all'); %avg DoLP value in the box
+            allPosBoxArray(i,5,j) = nanmean(subDoLP,'all');
+           subAoP = bAoPMask(posBoxArray(i,2):(posBoxArray(i,2)+posBoxArray(i,4)-1), posBoxArray(i,1):(posBoxArray(i,1)+posBoxArray(i,3)-1));
             tmp1 = circ_stats(subAoP.*(2*pi/180));
             avgAoP = tmp1.mean*(90/pi);
                 if avgAoP < 0
@@ -147,9 +151,10 @@ scale = 500;
             clear subDoLP subAoP tmp1 avgAoP
 
         end
-
+        waitbar(j/size(aop,3),h);
     end
-
+    close(h);
+    
     disp('Aop and dolp calcd for each bin');
 
 
@@ -171,11 +176,11 @@ scale = 500;
     stdAoPHeatMap = nan(size(aop));
 
     for j = 1:size(allPosBoxArray, 3)
-        for i = 1:size(allPosBoxArray,1)
+        for i = 1:size(posBoxArray,1)
 
-            avgDoLPHeatMap(allPosBoxArray(i,2):(allPosBoxArray(i,2)+allPosBoxArray(i,4)),allPosBoxArray(i,1):(allPosBoxArray(i,1)+allPosBoxArray(i,3)),j) = posBoxChange(i,5,j);
-            avgAoPHeatMap(allPosBoxArray(i,2):(allPosBoxArray(i,2)+allPosBoxArray(i,4)),allPosBoxArray(i,1):(allPosBoxArray(i,1)+allPosBoxArray(i,3)),j) = posBoxChange(i,6,j);
-            stdAoPHeatMap(allPosBoxArray(i,2):(allPosBoxArray(i,2)+allPosBoxArray(i,4)),allPosBoxArray(i,1):(allPosBoxArray(i,1)+allPosBoxArray(i,3)),j) = posBoxChange(i,7,j);
+            avgDoLPHeatMap(posBoxArray(i,2):(posBoxArray(i,2)+posBoxArray(i,4)-1),posBoxArray(i,1):(posBoxArray(i,1)+posBoxArray(i,3)-1),j) = posBoxChange(i,5,j);
+            avgAoPHeatMap(posBoxArray(i,2):(posBoxArray(i,2)+posBoxArray(i,4)-1),posBoxArray(i,1):(posBoxArray(i,1)+posBoxArray(i,3)-1),j) = posBoxChange(i,6,j);
+            stdAoPHeatMap(posBoxArray(i,2):(posBoxArray(i,2)+posBoxArray(i,4)-1),posBoxArray(i,1):(posBoxArray(i,1)+posBoxArray(i,3)-1),j) = posBoxChange(i,7,j);
 
 
         end
@@ -183,6 +188,9 @@ scale = 500;
     end
 
     disp('Data converted to RGB');
+    % figure; imagesc(avgAoPHeatMap(:,:,1));figure; imagesc(stdAoPHeatMap(:,:,1));figure; imagesc(avgDoLPHeatMap(:,:,1));
+    % TO HERE LEI 7/27/20%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% export to a video file
 
     %calculate range for each type
@@ -196,6 +204,25 @@ scale = 500;
     rgbAvgAopDelta = double2rgb(avgAoPHeatMap, redblue, [-rangeMapAvgAop rangeMapAvgAop]);
     rgbStdAopDelta = double2rgb(stdAoPHeatMap, redblue, [-rangeMapStdAop rangeMapStdAop]);
 
+    %(row,col,RGB,frame)
+    for i = 1:size(rgbAvgDolpDelta,4)  %loop frames
+        row = 1;
+        for r = 1:5:size(rgbAvgDolpDelta,1)
+            for c = 1:5:size(rgbAvgDolpDelta,2)
+                
+                if(IN BOX???HOW TO DO THIS)
+                if(allPosBoxArray(row,1,i)
+                  allPosBoxArray(row,8,i) = rgbAvgDolpDelta(r,c,1,i); %extra R
+                  allPosBoxArray(row,9,i) = rgbAvgDolpDelta(r,c,2,i); %extra G
+                  allPosBoxArray(row,10,i) = rgbAvgDolpDelta(r,c,3,i); %extra B
+                  row = row + 1;
+                end 
+                  
+            end
+        end
+    end    
+    
+    
     % compile and save into a video
 
     vidobj1 = VideoWriter(strcat(newSam, '-deltaAvgDoLP-heatmap.mp4'), 'MPEG-4');
@@ -247,12 +274,12 @@ scale = 500;
     imwrite(testme, strcat(newSam, '-deltaStdAoP-colorbar.tif'));
     
     disp('Videos and colorbar imgs saved');
-    cd(paths);
-    save(files{1,bigI}, 'allPosBoxArray', '-append');
+    %cd(paths);
+    %save(files{1,bigI}, 'allPosBoxArray', '-append');
     disp('Data Saved');
     
     close all
-    waitbar(bigI/numel(files), y);
+    %waitbar(bigI/numel(files), y);
     clearvars -except horzPix vertPix files paths newPath bigI y
     
 %end

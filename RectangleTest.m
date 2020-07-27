@@ -24,10 +24,10 @@ gripSide = 0;
     clear('frames');
     
     f = figure(1); 
-    xlim([300 700]);
-    ylim([50 500]);
+   % xlim([300 700]);
+   % ylim([50 500]);
    
-    sizeArray = size(posBoxCellArray);
+    sizeArray = size(deformedCellArray);
     maxI = sizeArray(1);
     maxJ = sizeArray(2);
     
@@ -55,14 +55,14 @@ gripSide = 0;
              for m = 1:maxI
                  for n = 1:maxJ
                         if(~isempty(deformedCellArray{m,n,h}))
-                             rectangle('Position', deformedCellArray{m,n,h}(1:4));
+                             rectangle('Position', deformedCellArray{m,n,h}(1:4),'FaceColor',[0 .5 .5],'LineStyle','none');
                              
                         end
                 end
             end
              
-              xlim([300 700]);
-    ylim([50 500]);
+            %  xlim([300 700]);
+  %  ylim([50 500]);
    
      
     
