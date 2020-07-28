@@ -12,6 +12,7 @@
 
 #MATLAB Debug Files
 *.asv
+*.mp4
 
 # Build results
 
