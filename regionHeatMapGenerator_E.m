@@ -120,7 +120,7 @@ scale = 500;
     disp('Mask Segmented');
     
     allPosBoxArray = repmat(posBoxArray,[1 1 size(aop,3)]);
-    allPosBoxArray = strainApproximation(allPosBoxArray, s0./scale);  % I added
+    allPosBoxArray = strainApproximation(allPosBoxArray, s0./scale);  % not the smartest to make a copy but I dont feel like editing all the code rn
     
      disp('Deformation Calculated');
     
@@ -201,19 +201,35 @@ scale = 500;
     rgbAvgAopDelta = double2rgb(avgAoPHeatMap, redblue, [-rangeMapAvgAop rangeMapAvgAop]);
     rgbStdAopDelta = double2rgb(stdAoPHeatMap, redblue, [-rangeMapStdAop rangeMapStdAop]);
 
-    %(row,col,RGB,frame)
+    %take color data from DoLP and put into posBox
+    %rgbAvgDolpDelta(row,col,RGB,frame)
     for i = 1:size(rgbAvgDolpDelta,4)  %loop frames
+        row = 1; %at start of new frame reset row count
         for r = startY:vertPix:size(rgbAvgDolpDelta,1) %the y dimension
             for c = startX:horzPix:size(rgbAvgDolpDelta,2)  %the x dimension
-                %this is going to be really slow...
-               for row = 1:size(allPosBoxArray,1)
-                   if(allPosBoxArray(row,1,i) == c && allPosBoxArray(row,2,i) == r)  %if in a box in the posBoxArray
-                       allPosBoxArray(row,8,i) = rgbAvgDolpDelta(r,c,1,i); %extra R
-                       allPosBoxArray(row,9,i) = rgbAvgDolpDelta(r,c,2,i); %extra G
-                       allPosBoxArray(row,10,i) = rgbAvgDolpDelta(r,c,3,i); %extra B
-                   end 
-               end 
+                  if(allPosBoxArray(row,1,1) == c && allPosBoxArray(row,2,1) == r)  %if in a box in the posBoxArray (always compare to first undeformed frame)
+                       allPosBoxArray(row,8,i) = rgbAvgDolpDelta(r,c,1,i); %extract R
+                       allPosBoxArray(row,9,i) = rgbAvgDolpDelta(r,c,2,i); %extract G
+                       allPosBoxArray(row,10,i) = rgbAvgDolpDelta(r,c,3,i); %extract B
+                       
+                       allPosBoxArray(row,11,i) = rgbAvgAopDelta(r,c,1,i); %extract R
+                       allPosBoxArray(row,12,i) = rgbAvgAopDelta(r,c,2,i); %extract G
+                       allPosBoxArray(row,13,i) = rgbAvgAopDelta(r,c,3,i); %extract B
+                       
+                       allPosBoxArray(row,14,i) = rgbStdAopDelta(r,c,1,i); %extract R
+                       allPosBoxArray(row,15,i) = rgbStdAopDelta(r,c,2,i); %extract G
+                       allPosBoxArray(row,16,i) = rgbStdAopDelta(r,c,3,i); %extract B
+                       
+                       
+                        row = row + 1; %allPosBox has a new row for every element so we incremement this every time we find one
+                  end
+                  if(row == size(allPosBoxArray,1)) %since outer loop is bigger than the num of boxes we have to check if we've completed all the boxes
+                        break;
+                  end 
             end
+             if(row == size(allPosBoxArray,1))
+                        break;
+             end
         end
     end    
     
