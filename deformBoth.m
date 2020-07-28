@@ -7,19 +7,20 @@ function deformedCellArray = deformBoth(posBoxCellArray, fixedX, maxRowLength, l
    leftBinCount = (fixedX-initialMinX)/initialBoxWidth;
    rightBinCount = (maxRowLength-leftBinCount);
    
+   filledLeft = filloutliers(leftClampPos,'makima','gesd');
+   smoothLeft = smoothdata(filledLeft, 'movmean',2);
    
-   smoothLeft = smoothdata(leftClampPos, 'movmean',5);
-   filledLeft = filloutliers(smoothLeft,'makima');
-   smoothRight = smoothdata(rightClampPos, 'movmean',5);
-   filledRight = filloutliers(smoothRight,'makima');
+   filledRight = filloutliers(rightClampPos,'makima','gesd');
+   smoothRight = smoothdata(filledRight, 'movmean',2);
+ 
        
        displacementPerFrameRight(1,1) = 0; %initialize first element 
        displacementPerFrameLeft(1,1) = 0; 
       for i = 2:length(rightClampPos)
-          displacementPerFrameRight(i,1) = filledRight(i-1,1) -  filledRight(i,1);
+          displacementPerFrameRight(i,1) = smoothRight(i-1,1) -  smoothRight(i,1);
       end
       for i = 2:length(leftClampPos)
-          displacementPerFrameLeft(i,1) = filledLeft(i-1,1) -  filledLeft(i,1);
+          displacementPerFrameLeft(i,1) = smoothLeft(i-1,1) -  smoothLeft(i,1);
       end
       
       %DEFORM RIGHT SIDE
