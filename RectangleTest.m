@@ -9,10 +9,7 @@
 %besides 0 or 1
 
 
-tissueWidth = 400;
 numFrames = size(deformedCellArray,3);
-totalStrainPercent = 50;
-%isSingleGrip = true;
 gripSide = 0;
 
 %function Test(tissueWidth, numFrames, totalStrainPercent, isSingleGrip, gripSide)
@@ -24,8 +21,8 @@ gripSide = 0;
     clear('frames');
     
     f = figure(1); 
-   % xlim([300 700]);
-   % ylim([50 500]);
+    xlim([0 size(s0,2)]);
+    ylim([0 size(s0,1)]);
    
     sizeArray = size(deformedCellArray);
     maxI = sizeArray(1);
@@ -61,8 +58,8 @@ gripSide = 0;
                 end
             end
              
-            %  xlim([300 700]);
-  %  ylim([50 500]);
+           xlim([0 size(s0,2)]);
+            ylim([0 size(s0,1)]);
    
      
     

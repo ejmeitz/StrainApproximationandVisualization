@@ -70,7 +70,7 @@ scale = 500;
     boxArray = zeros(numBox,5);
     countX = 0;
     countY = 0;
-    startX = floor(c.BoundingBox(1,1)); %bottom left??
+    startX = floor(c.BoundingBox(1,1)); %top left
     startY = floor(c.BoundingBox(1,2));
 
     %if this becomes dynamic will need to base off surrounding boxes
@@ -117,17 +117,16 @@ scale = 500;
             count = count + 1;
         end
     end
-
+    disp('Mask Segmented');
+    
     allPosBoxArray = repmat(posBoxArray,[1 1 size(aop,3)]);
     allPosBoxArray = strainApproximation(allPosBoxArray, s0./scale);  % I added
     
-
-    disp('Mask Segmented');
+     disp('Deformation Calculated');
+    
 
     %% calculate the average baseline dolp and aop within each region
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %WEIRDNESS HAPPENS SOMEWHERE FROM HERE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
     h = waitbar(0,"Calculating subAoP and subDoLP");
     for j = 1:size(aop,3)
             bDoLPMask = binaryImage.*dolp(:,:,j);  %apply mask to dolp 
@@ -189,8 +188,6 @@ scale = 500;
 
     disp('Data converted to RGB');
     % figure; imagesc(avgAoPHeatMap(:,:,1));figure; imagesc(stdAoPHeatMap(:,:,1));figure; imagesc(avgDoLPHeatMap(:,:,1));
-    % TO HERE LEI 7/27/20%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% export to a video file
 
     %calculate range for each type
@@ -206,18 +203,16 @@ scale = 500;
 
     %(row,col,RGB,frame)
     for i = 1:size(rgbAvgDolpDelta,4)  %loop frames
-        row = 1;
-        for r = 1:5:size(rgbAvgDolpDelta,1)
-            for c = 1:5:size(rgbAvgDolpDelta,2)
-                
-                if(IN BOX???HOW TO DO THIS)
-                if(allPosBoxArray(row,1,i)
-                  allPosBoxArray(row,8,i) = rgbAvgDolpDelta(r,c,1,i); %extra R
-                  allPosBoxArray(row,9,i) = rgbAvgDolpDelta(r,c,2,i); %extra G
-                  allPosBoxArray(row,10,i) = rgbAvgDolpDelta(r,c,3,i); %extra B
-                  row = row + 1;
-                end 
-                  
+        for r = startY:vertPix:size(rgbAvgDolpDelta,1) %the y dimension
+            for c = startX:horzPix:size(rgbAvgDolpDelta,2)  %the x dimension
+                %this is going to be really slow...
+               for row = 1:size(allPosBoxArray,1)
+                   if(allPosBoxArray(row,1,i) == c && allPosBoxArray(row,2,i) == r)  %if in a box in the posBoxArray
+                       allPosBoxArray(row,8,i) = rgbAvgDolpDelta(r,c,1,i); %extra R
+                       allPosBoxArray(row,9,i) = rgbAvgDolpDelta(r,c,2,i); %extra G
+                       allPosBoxArray(row,10,i) = rgbAvgDolpDelta(r,c,3,i); %extra B
+                   end 
+               end 
             end
         end
     end    

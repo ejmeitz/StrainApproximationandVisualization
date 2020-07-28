@@ -3,7 +3,7 @@
 %initial width of a box
 
 %returns the x-coord of the central box  (maybe make it return the index??)
-function fixedX = findFixed (firstFrameAsCellArray, minX, maxX)
+function fixedX = findFixed (firstFrameAsCellArray, minX, maxX, s0Rows, s0Cols)
 
     sizeArray = size(firstFrameAsCellArray);
     maxI = sizeArray(1);
@@ -13,11 +13,14 @@ function fixedX = findFixed (firstFrameAsCellArray, minX, maxX)
     initialBoxWidth = firstFrameAsCellArray{1,1}(3);  %3 value in sub array is width
     
      temp = figure(1);
+     xlim([0 s0Cols]);
+     ylim([0 s0Rows]);
+    
          %draw first frame
         for m = 1:maxI
              for n = 1:maxJ
                    if(~isempty(firstFrameAsCellArray{m,n}))
-                             rectangle('Position', firstFrameAsCellArray{m,n});
+                           rectangle('Position', firstFrameAsCellArray{m,n});
                    end
              end
         end
