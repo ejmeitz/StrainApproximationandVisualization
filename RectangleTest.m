@@ -1,49 +1,50 @@
-numFrames = size(allPosBoxArray,3);
+numFrames = size(deformedPosBoxArray,3);
 
     frames = [];
     clear('frames');
+    name = inputdlg("Choose a file name");
     
-    f = figure(1);
-   %$set(gca,'color','black');
+  % set(gca,'color','black');
     xlim([0 size(s0,2)]);
     ylim([0 size(s0,1)]);
    
-    sizeArray = size(allPosBoxArray);
+    sizeArray = size(deformedPosBoxArray);
     maxI = sizeArray(1);
     
   
-    
-    abc = waitbar(0,'Drawing boxes...');
-    %when true grip is pulling on the right
-
-        count = 1;
-        for h = 1:(numFrames)
-          
-            
+    updateWaitbar = waitbarParfor(size(s0,3), "Drawing Rectangles");
+        parfor h = 1:(numFrames)
+        f = figure(1);
              for m = 1:maxI
-               %  r =  allPosBoxArray(m,14,h);
+                 %r =  allPosBoxArray(m,14,h);
                 % g =  allPosBoxArray(m,15,h);
-               %  b =  allPosBoxArray(m,16,h);
-                %   rectangle('Position', allPosBoxArray(m,1:4,h),'FaceColor',[r g b],'LineStyle','none','LineWidth',0.01);
-                   rectangle('Position', allPosBoxArray(m,1:4,h));
+                % b =  allPosBoxArray(m,16,h);
+                 %  rectangle('Position', allPosBoxArray(m,1:4,h),'FaceColor',[r g b],'LineStyle','none','LineWidth',0.01);
+                  rectangle('Position', deformedPosBoxArray(m,1:4,h));
 
 
              end
           
           % set(gca,'color','black');
+            set(gca,'visible','off')
            xlim([0 size(s0,2)]);
            ylim([0 size(s0,1)]);
    
      
     
-            frames(count) = getframe(f);  %add frame to array
+            frames(h) = getframe(f);  %add frame to array
             clf(f);  %clear figure 
-             waitbar(count/(numFrames));
-             count = count + 1;  
+            updateWaitbar();
+            close(f);
         end
 
-    close(f);
-    close(abc);
-  
-    set(gca,'visible','off')
-    movie(frames,1000,30); %play movie x times at y fps
+    
+    
+    vidfile = VideoWriter(name,'MPEG-4');
+    open(vidfile);
+    for i = 1:numFrames 
+        
+        writeVideo(vidfile, frames(i));
+    end
+    close(vidfile);
+

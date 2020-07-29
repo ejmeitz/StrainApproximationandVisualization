@@ -8,8 +8,8 @@ function trackedCircleLocations = trackCircles  (s0, threshUp, threshDown, chose
     brush = strel('disk', brushSize);
 
     trackedCircleLocations = ones(2,2,size(s0,3));
-    h = waitbar(0,'Tracking circles...');
-    for i = 1:size(s0,3)
+    updateWaitbar = waitbarParfor(size(s0,3), "Tracking Circles");
+    parfor i = 1:size(s0,3)
         
         eroded = imerode(s0(:,:,i),brush);
         Iobr = imreconstruct(eroded,s0(:,:,i));
@@ -44,11 +44,14 @@ function trackedCircleLocations = trackCircles  (s0, threshUp, threshDown, chose
            end
   
         end
-        trackedCircleLocations(1,1,i) = centers(closestIndex1, 1); %add new x loc of circle to array
-        trackedCircleLocations(2,1,i) = centers(closestIndex2, 1);
+        temp = [centers(closestIndex1, 1) , centers(closestIndex2, 1)]
         
-        waitbar(i/size(s0,3),h)
+        %trackedCircleLocations(1,1,i) = centers(closestIndex1, 1); %add new x loc of circle to array
+       % trackedCircleLocations(2,1,i) = centers(closestIndex2, 1);
+        trackedCircleLocations(:,1,i) = temp;
+        
+       updateWaitbar();
     end
-    close(h);
+
     return;
 end
