@@ -38,7 +38,7 @@ numFrames = size(allPosBoxArray,3);
     
             frames(count) = getframe(f);  %add frame to array
             clf(f);  %clear figure 
-             waitbar(count/(numFrames-300));
+             waitbar(count/(numFrames));
              count = count + 1;  
         end
 

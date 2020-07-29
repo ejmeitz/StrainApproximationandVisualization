@@ -17,10 +17,10 @@ function deformedCellArray = deformBoth(posBoxCellArray, fixedX, maxRowLength, l
        displacementPerFrameRight(1,1) = 0; %initialize first element 
        displacementPerFrameLeft(1,1) = 0; 
       for i = 2:length(rightClampPos)
-          displacementPerFrameRight(i,1) = smoothRight(i-1,1) -  smoothRight(i,1);
+          displacementPerFrameRight(i,1) = smoothRight(i,1) -  smoothRight(i-1,1);
       end
       for i = 2:length(leftClampPos)
-          displacementPerFrameLeft(i,1) = smoothLeft(i-1,1) -  smoothLeft(i,1);
+          displacementPerFrameLeft(i,1) = smoothLeft(i,1) -  smoothLeft(i-1,1);
       end
       
       %DEFORM RIGHT SIDE

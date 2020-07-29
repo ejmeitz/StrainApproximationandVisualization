@@ -9,7 +9,7 @@ function deformedCellArray = deformRight(posBoxCellArray, maxRowLength, rightCla
        displacementPerFrame(1,1) = 0; %initialize first element 
        changeFromInit(1,1) = 0;
       for i = 2:length(rightClampPos)
-          displacementPerFrame(i,1) = smoothClampData(i-1,1) -  smoothClampData(i,1);
+          displacementPerFrame(i,1) = smoothClampData(i,1) -  smoothClampData(i-1,1);
       end
       
       
