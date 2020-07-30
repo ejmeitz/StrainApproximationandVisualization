@@ -149,7 +149,7 @@ scale = 500;
             bDoLPMask = erodedImg.*dolp(:,:,j);  %apply mask to dolp 
             bAoPMask = erodedImg.*aop(:,:,j);  %apply mask to aop
         for i = 1:size(posBoxArray,1)
-
+            %base off undeformed array 
             subDoLP = bDoLPMask(posBoxArray(i,2):(posBoxArray(i,2)+posBoxArray(i,4)-1), posBoxArray(i,1):(posBoxArray(i,1)+posBoxArray(i,3)-1)); %calc 5x5 subDoLP
            % allPosBoxArray(i,5,j) = mean(subDoLP, 'all'); %avg DoLP value in the box
             allPosBoxArray(i,5,j) = nanmean(subDoLP,'all');
