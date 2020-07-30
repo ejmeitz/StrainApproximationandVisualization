@@ -46,7 +46,7 @@ function trackedCircleLocations = trackCircles  (s0, threshUp, threshDown, chose
            end
   
         end
-        temp = [centers(closestIndex1, 1) , centers(closestIndex2, 1)]
+        temp = [centers(closestIndex1, 1) , centers(closestIndex2, 1)];
         
         %trackedCircleLocations(1,1,i) = centers(closestIndex1, 1); %add new x loc of circle to array
        % trackedCircleLocations(2,1,i) = centers(closestIndex2, 1);

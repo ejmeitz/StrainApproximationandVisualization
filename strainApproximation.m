@@ -16,7 +16,7 @@ function deformedPosBoxArray = strainApproximation(allPosBoxArray, scaled_s0)
     fixedX = 0;
    
     %have user create mask and pick circles to track
-    [threshUp, threshDown] = pickCircles(scaled_s0);  %this will assign a variable in base for chosenCircles
+    [chosenCircles, threshUp, threshDown] = pickCircles(scaled_s0);  %this will assign a variable in base for chosenCircles
     %track those circles throughout the video
     trackedCircleLocations = trackCircles(scaled_s0, threshUp, threshDown, chosenCircles);
     %figure out where force is applied based on those circles movements
