@@ -24,6 +24,13 @@ function [forceLocation, leftClampPos, rightClampPos] = deduceForceLocation(trac
           rightClampPos = xlocs1;
       end
       
+      filledLeft = filloutliers(leftClampPos,'makima','gesd');
+      leftClampPos = smoothdata(filledLeft, 'movmean',2);
+   
+      filledRight = filloutliers(rightClampPos,'makima','gesd');
+      rightClampPos = smoothdata(filledRight, 'movmean',2);
+      
+      
       %if left clamp is stationary
       if(range(leftClampPos) <= 4)
           forceLocation = 'right';

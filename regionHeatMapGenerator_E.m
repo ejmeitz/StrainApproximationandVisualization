@@ -49,24 +49,40 @@ scale = 500;
     se = strel('disk', 25); %creates a disk shaped region in a matrix with r=25 (brush)
     dilatedImage = imdilate(q,se);  %dilates image
     binaryImage = imerode(dilatedImage,se);   %erodes image
-    c = regionprops(binaryImage,'BoundingBox'); %creates bounding box on image 
-    figure;
-    imshow(binaryImage);
+    
+    brush = strel('square',8);
+    erodedImg = imerode(binaryImage,brush);
+    
+    c = regionprops(erodedImg,'BoundingBox'); %creates bounding box on image 
+    f1 = figure;
+    imshow(erodedImg);
     rectangle('Position',c.BoundingBox, 'EdgeColor', 'r'); %draws red bounding box on image 
 
     %create vector with number of positive elements in each row
-    rowCount = sum(binaryImage,2); %sums positive elements in each row of image
-    colCount = sum(binaryImage,1); %sums positive elements in each col of image
+%     rowCount = sum(erodedImg,2); %sums positive elements in each row of image
+%     colCount = sum(erodedImg,1); %sums positive elements in each col of image  %THIS ASSUME REGION IS NOT OBLIQUE AND BREAKS OTHERWISE (e.g. only allows for rectangular regions)
 
-    maxRow = max(rowCount);  %finds row with most boxes
-    maxCol = max(colCount); %finds col with most boxes
+%     maxRow = max(rowCount);  %finds row with most boxes
+%     maxCol = max(colCount); %finds col with most boxes
+% 
+%     maxNumRowBox = ceil(maxRow/horzPix);  %calculates number max number of boxes in each dim
+%     maxNumColBox = ceil(maxCol/vertPix);
+% 
+%     %create array of square ROIs comprising the bounding box
+%     numBox = maxNumRowBox*maxNumColBox;
 
-    maxNumRowBox = ceil(maxRow/horzPix);  %calculates number max number of boxes in each dim
-    maxNumColBox = ceil(maxCol/vertPix);
-
-    %create array of square ROIs comprising the bounding box
+ %create array of square ROIs comprising the bounding box
+     leastX = c.BoundingBox(1);
+    greatestX = c.BoundingBox(1) + c.BoundingBox(3);
+    leastY = c.BoundingBox(2);
+    greatestY = c.BoundingBox(2) + c.BoundingBox(4);
+    
+    maxNumRowBox = ceil((greatestX - leastX)/horzPix);
+    maxNumColBox = ceil((greatestY - leastY)/vertPix);
+    
+   
     numBox = maxNumRowBox*maxNumColBox;
-
+    
     boxArray = zeros(numBox,5);
     countX = 0;
     countY = 0;
@@ -88,24 +104,24 @@ scale = 500;
         end
 
     end
-
-    figure;
-    imshow(binaryImage);
+    close(f1);
+    f2= figure;
+    imshow(erodedImg);
     rectangle('Position',c.BoundingBox, 'EdgeColor', 'r');
 
        %check if box contains gel -- if it contains any gel spot 5 gets a
        %value greater than 0
     for i = 1:numBox
       rectangle('Position', boxArray(i,1:4), 'EdgeColor', 'b');
-      subArray = binaryImage(boxArray(i,2):(boxArray(i,2)+boxArray(i,4)-1), boxArray(i,1):(boxArray(i,1)+boxArray(i,3)-1));
+      subArray = erodedImg(boxArray(i,2):(boxArray(i,2)+boxArray(i,4)-1), boxArray(i,1):(boxArray(i,1)+boxArray(i,3)-1));
       boxArray(i,5) = sum(subArray, 'all'); %if sum is 0 there is no gel
     end
 
 
     % create edited array with only boxes containing mask
-
+    close(f2);
     figure;
-    imshow(binaryImage);
+    imshow(erodedImg);
     rectangle('Position',c.BoundingBox, 'EdgeColor', 'r');
     count = 1;
     
@@ -119,8 +135,9 @@ scale = 500;
     end
     disp('Mask Segmented');
     
-    allPosBoxArray = repmat(posBoxArray,[1 1 size(aop,3)]);
-    allPosBoxArray = strainApproximation(allPosBoxArray, s0./scale);  % not the smartest to make a copy but I dont feel like editing all the code rn
+    allPosBoxArray = repmat(posBoxArray,[1 1 size(aop,3)]);   
+    scaled_s0 = s0./scale;
+    allPosBoxArray = strainApproximation(allPosBoxArray, scaled_s0);  
     
      disp('Deformation Calculated');
     
@@ -129,8 +146,8 @@ scale = 500;
     
     h = waitbar(0,"Calculating subAoP and subDoLP");
     for j = 1:size(aop,3)
-            bDoLPMask = binaryImage.*dolp(:,:,j);  %apply mask to dolp 
-            bAoPMask = binaryImage.*aop(:,:,j);  %apply mask to aop
+            bDoLPMask = erodedImg.*dolp(:,:,j);  %apply mask to dolp 
+            bAoPMask = erodedImg.*aop(:,:,j);  %apply mask to aop
         for i = 1:size(posBoxArray,1)
 
             subDoLP = bDoLPMask(posBoxArray(i,2):(posBoxArray(i,2)+posBoxArray(i,4)-1), posBoxArray(i,1):(posBoxArray(i,1)+posBoxArray(i,3)-1)); %calc 5x5 subDoLP

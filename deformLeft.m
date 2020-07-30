@@ -2,14 +2,14 @@ function deformedCellArray = deformLeft(posBoxCellArray, maxRowLength, leftClamp
       deformedCellArray = posBoxCellArray;  %in final dont make a copy
        %1 = x loc  %2 = y loc  % 3 = width   %4 = width
       
-        filledClampData = filloutliers(leftClampPos,'makima','gesd');
-       smoothClampData = smoothdata(filledClampData, 'movmean',2);
+%         filledClampData = filloutliers(leftClampPos,'makima','gesd');
+%        smoothClampData = smoothdata(filledClampData, 'movmean',2);
      
        
        
        displacementPerFrame(1,1) = 0; %initialize first element 
       for i = 2:length(leftClampPos)
-          displacementPerFrame(i,1) = smoothClampData(i,1) -  smoothClampData(i-1,1);
+          displacementPerFrame(i,1) = leftClampPos(i,1) -  leftClampPos(i-1,1);
       end
       
       

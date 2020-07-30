@@ -3,30 +3,25 @@ function [chosenCircles, threshUp, threshDown] = pickCircles(s0)    %scaled s0 b
     %settings
     brushSize = 4;
     minRad = 18;
-    maxRad = 100;
+    maxRad = 60;
     
     brush = strel('disk', brushSize);
+    chosenCircles = [];
     
     img = s0(:,:,1);
     img_erode = imerode(img,brush);
     Iobr = imreconstruct(img_erode,img);
-
-    chosenCircles  = zeros(2,2);
    
-
-
-       uiwait(msgbox('Adjust sliders until only the circular pins are visible','Marker Selection','modal'));
+     uiwait(msgbox('Adjust sliders until only the circular pins are visible','Marker Selection','modal'));
       %have user apply threshold 
-      [threshUp,threshDown] = setThresh();
-  
- 
+    [threshUp,threshDown] = setThresh();
   
     function pickCirclesUI(filled_img) 
         
       f = figure();
-      [centers, radii] = imfindcircles(filled_img, [minRad maxRad]);
+      [centers, radii] = imfindcircles(filled_img, [minRad maxRad]); %find circles
       imshow(filled_img);
-      viscircles(centers,radii);
+      viscircles(centers,radii); %show circles
 
 
       b1 = uicontrol(f,'style', 'pushbutton', 'string', 'Done', 'CallBack', {@buttonPushed,f});
@@ -73,8 +68,8 @@ function [chosenCircles, threshUp, threshDown] = pickCircles(s0)    %scaled s0 b
                 temp(2,2) = centers(i,2);
             end
         end
-        
-       assignin('base', 'chosenCircles', temp);
+        chosenCircles = temp;
+       assignin('base', 'chosenCircles', temp); %this doesn't work...
        set(b2,'Enable','on')
        set(b1,'Enable','on')
             return;
@@ -87,8 +82,10 @@ function [chosenCircles, threshUp, threshDown] = pickCircles(s0)    %scaled s0 b
        %create the binary threshold img
        thresh_img = (Iobr<=threshUp) & (Iobr>=threshDown);
 
-       %fill in holes in image so circle alg works better
-       filled_img = imfill(thresh_img,8,'holes');
+       %fill in holes in image so circle alg works better 
+       noNoise = medfilt2(thresh_img);
+       filled_img = imfill(noNoise,8,'holes');
+      
        pickCirclesUI(filled_img);
        return;
     end

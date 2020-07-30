@@ -7,20 +7,20 @@ function deformedCellArray = deformBoth(posBoxCellArray, fixedX, maxRowLength, l
    leftBinCount = (fixedX-initialMinX)/initialBoxWidth;
    rightBinCount = (maxRowLength-leftBinCount);
    
-   filledLeft = filloutliers(leftClampPos,'makima','gesd');
-   smoothLeft = smoothdata(filledLeft, 'movmean',2);
-   
-   filledRight = filloutliers(rightClampPos,'makima','gesd');
-   smoothRight = smoothdata(filledRight, 'movmean',2);
+%    filledLeft = filloutliers(leftClampPos,'makima','gesd');
+%    smoothLeft = smoothdata(filledLeft, 'movmean',2);
+%    
+%    filledRight = filloutliers(rightClampPos,'makima','gesd');
+%    smoothRight = smoothdata(filledRight, 'movmean',2);
  
        
        displacementPerFrameRight(1,1) = 0; %initialize first element 
        displacementPerFrameLeft(1,1) = 0; 
       for i = 2:length(rightClampPos)
-          displacementPerFrameRight(i,1) = smoothRight(i,1) -  smoothRight(i-1,1);
+          displacementPerFrameRight(i,1) = rightClampPos(i,1) -  rightClampPos(i-1,1);
       end
       for i = 2:length(leftClampPos)
-          displacementPerFrameLeft(i,1) = smoothLeft(i,1) -  smoothLeft(i-1,1);
+          displacementPerFrameLeft(i,1) = leftClampPos(i,1) -  leftClampPos(i-1,1);
       end
       
       %DEFORM RIGHT SIDE
@@ -51,7 +51,7 @@ function deformedCellArray = deformBoth(posBoxCellArray, fixedX, maxRowLength, l
                      if(posBoxCellArray{r,c,j}(1) >= fixedX) %if to right of fixed
                             if(countRight == 0) %if the first box we look at on the right side
                                 startXRight = posBoxCellArray{r,c,j}(1);
-                                startIndex = ((startXRight - fixedX)/initialBoxWidth)+1;
+                                startIndex = ((startXRight - fixedX)/initialBoxWidth) + 1;
                             end %without checking this rows that don't start at the center will be displaced incorrectly
                     
                               deformedCellArray{r,c,j}(1) =  deformedCellArray{r,c,j}(1) + sum(displacementRight(startIndex:startIndex + countRight,1));  %update xloc

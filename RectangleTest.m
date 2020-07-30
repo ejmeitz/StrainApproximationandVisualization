@@ -21,8 +21,6 @@ numFrames = size(deformedPosBoxArray,3);
                 % b =  allPosBoxArray(m,16,h);
                  %  rectangle('Position', allPosBoxArray(m,1:4,h),'FaceColor',[r g b],'LineStyle','none','LineWidth',0.01);
                   rectangle('Position', deformedPosBoxArray(m,1:4,h));
-
-
              end
           
           % set(gca,'color','black');
@@ -31,7 +29,6 @@ numFrames = size(deformedPosBoxArray,3);
            ylim([0 size(s0,1)]);
    
      
-    
             frames(h) = getframe(f);  %add frame to array
             clf(f);  %clear figure 
             updateWaitbar();

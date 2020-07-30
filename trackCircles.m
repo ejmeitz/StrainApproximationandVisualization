@@ -3,13 +3,13 @@ function trackedCircleLocations = trackCircles  (s0, threshUp, threshDown, chose
     %these settings must match settings in "pickCircles.m"
     brushSize = 4;
     minRad = 18;
-    maxRad = 100;
+    maxRad = 60;
     
     brush = strel('disk', brushSize);
 
     trackedCircleLocations = ones(2,2,size(s0,3));
     updateWaitbar = waitbarParfor(size(s0,3), "Tracking Circles");
-    parfor i = 1:size(s0,3)
+    for i = 1:size(s0,3)
         
         eroded = imerode(s0(:,:,i),brush);
         Iobr = imreconstruct(eroded,s0(:,:,i));
@@ -17,9 +17,11 @@ function trackedCircleLocations = trackCircles  (s0, threshUp, threshDown, chose
         %apply thresholds to whole s0 video
         thresh_img = (Iobr <= threshUp) & (Iobr >= threshDown);
 
-         %fill in holes in image so circle alg works better
-        filled_img = imfill(thresh_img, 8, 'holes');
-   
+         %fill in holes in image so circle alg works better 
+         noNoise = medfilt2(thresh_img);
+        filled_img = imfill(noNoise, 8, 'holes');
+       
+        
         [centers,radii] = imfindcircles(filled_img, [minRad maxRad]);
       
         %loop through all found circles and find the two closest to the
