@@ -34,32 +34,36 @@ function deformedCellArray = deformBoth(posBoxCellArray, fixedX, maxRowLength, l
         displacementLeft = flipud(displacementLeft);  %we will still work left to right so flip displacements
 
          for r = 1 : size(posBoxCellArray,1) %loop through each row and apply the displacement
-             temp = posBoxCellArray{r,1,j}(1);
+             temp = posBoxCellArray{r,1,1}(1);
              numBoxOnLeft = (fixedX - temp)/initialBoxWidth;
              
-             countLeft = 1;
-             currentIndex = 1;
+             countLeft = 0;
+             currentIndexRight = 1;
+             currentIndexLeft = 1;
              for c = 1 : size(posBoxCellArray,2) 
-                
-                 
-                 %breaks when theres gaps because the "first" box in the
-                 %row always gets 0 for the right handed deformation
                 if(~isempty(posBoxCellArray{r,c,j})) %if empty skip
                     
                     
                      if(posBoxCellArray{r,c,j}(1) >= fixedX) %if to right of fixed
-                             if(currentIndex == 1) %if the first box in a row not necessarilly furthest left
+                             if(currentIndexRight == 1) %if the first box in a row not necessarilly furthest left
                                 startXRow = posBoxCellArray{r,c,j}(1);
                                 startIndex = ((startXRow-fixedX)/initialBoxWidth) + 1; %plus 1 cause MATLAB starts at 1 
-                                currentIndex = startIndex;
+                                currentIndexRight = startIndex;
                               end 
                     
-                              deformedCellArray{r,c,j}(1) =  deformedCellArray{r,c,j}(1) + sum(displacementRight(1:currentIndex,1));  %update xloc
-                              deformedCellArray{r,c,j}(3) =  deformedCellArray{r,c,j}(3) + displacementRight(currentIndex,1);    %update width
-                              currentIndex = currentIndex + 1;
+                              deformedCellArray{r,c,j}(1) =  deformedCellArray{r,c,j}(1) + sum(displacementRight(1:currentIndexRight,1));  %update xloc
+                              deformedCellArray{r,c,j}(3) =  deformedCellArray{r,c,j}(3) + displacementRight(currentIndexRight,1);    %update width
+                              currentIndexRight = currentIndexRight + 1;
                      else %if to left of fixed
-                             deformedCellArray{r,c,j}(1) =  deformedCellArray{r,c,j}(1) - sum(displacementLeft(countLeft:numBoxOnLeft,1));  %update xloc
-                             deformedCellArray{r,c,j}(3) =  deformedCellArray{r,c,j}(3) + displacementLeft(countLeft, 1);    %update width
+                         if(currentIndexLeft == 1) %if the first box in a row not necessarilly furthest left
+                                startXRow = posBoxCellArray{r,c,j}(1);
+                                startIndex = ((startXRow-initialMinX)/initialBoxWidth) + 1; %plus 1 cause MATLAB starts at 1 
+                                currentIndexLeft = startIndex;
+                         end 
+
+                             deformedCellArray{r,c,j}(1) =  deformedCellArray{r,c,j}(1) - sum(displacementLeft(1:numBoxOnLeft-countLeft,1));  %update xloc
+                             deformedCellArray{r,c,j}(3) =  deformedCellArray{r,c,j}(3) + displacementLeft(numBoxOnLeft-countLeft, 1);    %update width
+                             currentIndexLeft = currentIndexLeft + 1;
                              countLeft = countLeft + 1;
                      end
                  end 
