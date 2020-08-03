@@ -9,7 +9,7 @@ function trackedCircleLocations = trackCircles  (s0, threshUp, threshDown, chose
 
     trackedCircleLocations = ones(2,2,size(s0,3));
     updateWaitbar = waitbarParfor(size(s0,3), "Tracking Circles");
-    for i = 1:size(s0,3)
+    parfor i = 1:size(s0,3)
         
         eroded = imerode(s0(:,:,i),brush);
         Iobr = imreconstruct(eroded,s0(:,:,i));

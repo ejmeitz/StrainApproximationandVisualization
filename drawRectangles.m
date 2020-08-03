@@ -1,3 +1,4 @@
+function drawRectangles(numFrames)
 numFrames = size(allPosBoxArray,3);
 
     frames = [];

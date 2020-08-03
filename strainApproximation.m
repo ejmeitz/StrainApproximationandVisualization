@@ -4,7 +4,7 @@ function deformedPosBoxArray = strainApproximation(allPosBoxArray, scaled_s0)
     deformedCellArray = {};
     
     
-    sizeArray = size(posBoxCellArray);
+    sizeArray = size(posBoxCellArray(:,:,1));
     maxI = sizeArray(1);
     maxJ = sizeArray(2);
     

@@ -42,7 +42,7 @@ scale = 500;
 %     disp('Loaded File')
 
     %% segment mask into regions
-
+    addpath('CircStats');
 
     %create bounding box for ROI
     q = bwareafilt(maskImg(:,:,1),1);  %get rid of all blobs except the biggest one
@@ -51,11 +51,13 @@ scale = 500;
     binaryImage = imerode(dilatedImage,se);   %erodes image
     
     brush = strel('square',8);
-    erodedImg = imerode(binaryImage,brush);
+    erodedImg = imerode(binaryImage,brush); %trim edges back a bit more
     
-    c = regionprops(erodedImg,'BoundingBox'); %creates bounding box on image 
+    filledImg = imfill(binaryImage, 8, 'holes');
+    
+    c = regionprops(filledImg,'BoundingBox'); %creates bounding box on image 
     f1 = figure;
-    imshow(erodedImg);
+    imshow(filledImg);
     rectangle('Position',c.BoundingBox, 'EdgeColor', 'r'); %draws red bounding box on image 
 
     %create vector with number of positive elements in each row
@@ -106,14 +108,14 @@ scale = 500;
     end
     close(f1);
     f2= figure;
-    imshow(erodedImg);
+    imshow(filledImg);
     rectangle('Position',c.BoundingBox, 'EdgeColor', 'r');
 
        %check if box contains gel -- if it contains any gel spot 5 gets a
        %value greater than 0
     for i = 1:numBox
       rectangle('Position', boxArray(i,1:4), 'EdgeColor', 'b');
-      subArray = erodedImg(boxArray(i,2):(boxArray(i,2)+boxArray(i,4)-1), boxArray(i,1):(boxArray(i,1)+boxArray(i,3)-1));
+      subArray = filledImg(boxArray(i,2):(boxArray(i,2)+boxArray(i,4)-1), boxArray(i,1):(boxArray(i,1)+boxArray(i,3)-1));
       boxArray(i,5) = sum(subArray, 'all'); %if sum is 0 there is no gel
     end
 
@@ -121,7 +123,7 @@ scale = 500;
     % create edited array with only boxes containing mask
     close(f2);
     figure;
-    imshow(erodedImg);
+    imshow(filledImg);
     rectangle('Position',c.BoundingBox, 'EdgeColor', 'r');
     count = 1;
     
@@ -146,8 +148,8 @@ scale = 500;
     
     h = waitbar(0,"Calculating subAoP and subDoLP");
     for j = 1:size(aop,3)
-            bDoLPMask = erodedImg.*dolp(:,:,j);  %apply mask to dolp 
-            bAoPMask = erodedImg.*aop(:,:,j);  %apply mask to aop
+            bDoLPMask = filledImg.*dolp(:,:,j);  %apply mask to dolp 
+            bAoPMask = filledImg.*aop(:,:,j);  %apply mask to aop
         for i = 1:size(posBoxArray,1)
             %base off undeformed array 
             subDoLP = bDoLPMask(posBoxArray(i,2):(posBoxArray(i,2)+posBoxArray(i,4)-1), posBoxArray(i,1):(posBoxArray(i,1)+posBoxArray(i,3)-1)); %calc 5x5 subDoLP

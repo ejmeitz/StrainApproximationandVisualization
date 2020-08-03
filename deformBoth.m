@@ -37,9 +37,8 @@ function deformedCellArray = deformBoth(posBoxCellArray, fixedX, maxRowLength, l
              temp = posBoxCellArray{r,1,j}(1);
              numBoxOnLeft = (fixedX - temp)/initialBoxWidth;
              
-             countRight = 0; %at start of new row reset counts
              countLeft = 1;
-             startIndex = 1; %assume every row starts at center for now
+             currentIndex = 1;
              for c = 1 : size(posBoxCellArray,2) 
                 
                  
@@ -49,14 +48,15 @@ function deformedCellArray = deformBoth(posBoxCellArray, fixedX, maxRowLength, l
                     
                     
                      if(posBoxCellArray{r,c,j}(1) >= fixedX) %if to right of fixed
-                            if(countRight == 0) %if the first box we look at on the right side
-                                startXRight = posBoxCellArray{r,c,j}(1);
-                                startIndex = ((startXRight - fixedX)/initialBoxWidth) + 1;
-                            end %without checking this rows that don't start at the center will be displaced incorrectly
+                             if(currentIndex == 1) %if the first box in a row not necessarilly furthest left
+                                startXRow = posBoxCellArray{r,c,j}(1);
+                                startIndex = ((startXRow-fixedX)/initialBoxWidth) + 1; %plus 1 cause MATLAB starts at 1 
+                                currentIndex = startIndex;
+                              end 
                     
-                              deformedCellArray{r,c,j}(1) =  deformedCellArray{r,c,j}(1) + sum(displacementRight(startIndex:startIndex + countRight,1));  %update xloc
-                              deformedCellArray{r,c,j}(3) =  deformedCellArray{r,c,j}(3) + displacementRight(startIndex + countRight,1);    %update width
-                              countRight = countRight + 1;
+                              deformedCellArray{r,c,j}(1) =  deformedCellArray{r,c,j}(1) + sum(displacementRight(1:currentIndex,1));  %update xloc
+                              deformedCellArray{r,c,j}(3) =  deformedCellArray{r,c,j}(3) + displacementRight(currentIndex,1);    %update width
+                              currentIndex = currentIndex + 1;
                      else %if to left of fixed
                              deformedCellArray{r,c,j}(1) =  deformedCellArray{r,c,j}(1) - sum(displacementLeft(countLeft:numBoxOnLeft,1));  %update xloc
                              deformedCellArray{r,c,j}(3) =  deformedCellArray{r,c,j}(3) + displacementLeft(countLeft, 1);    %update width
