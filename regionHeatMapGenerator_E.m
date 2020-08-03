@@ -252,56 +252,57 @@ scale = 500;
         end
     end    
     
+    drawRectangles(allPosBoxArray,size(s0,2),size(s0,1));
     
-    % compile and save into a video
-
-    vidobj1 = VideoWriter(strcat(newSam, '-deltaAvgDoLP-heatmap.mp4'), 'MPEG-4');
-    open(vidobj1);
-    writeVideo(vidobj1, rgbAvgDolpDelta);
-    close(vidobj1);
-
-    vidobj2 = VideoWriter(strcat(newSam, '-deltaAvgAoP-heatmap.mp4'), 'MPEG-4');
-    open(vidobj2);
-    writeVideo(vidobj2, rgbAvgAopDelta);
-    close(vidobj2);
-
-    vidobj3 = VideoWriter(strcat(newSam, '-deltaStdAoP-heatmap.mp4'), 'MPEG-4');
-    open(vidobj3);
-    writeVideo(vidobj3, rgbStdAopDelta);
-    close(vidobj3);
-
-
-    % save colorbar for each video
-    fig1 = figure;
-    ax1 = axes;
-    r1 = colormap(redblue);
-    cbar_handle = colorbar;
-    cbar_handle.TickLabels = string(num2cell(round(linspace(-rangeMapDolp, rangeMapDolp, 11),3)));
-    ax1.Visible = 'off';
-    fig1.Color = 'w';
-    testme = export_fig('-transparent');
-    imwrite(testme, strcat(newSam, '-deltaAvgDoLP-colorbar.tif'));
-
-
-    fig2 = figure;
-    ax2 = axes;
-    r2 = colormap(redblue);
-    cbar_handle = colorbar;
-    cbar_handle.TickLabels = string(num2cell(round(linspace(-rangeMapAvgAop, rangeMapAvgAop, 11),3)));
-    ax2.Visible = 'off';
-    fig2.Color = 'w';
-    testme = export_fig('-transparent');
-    imwrite(testme, strcat(newSam, '-deltaAvgAoP-colorbar.tif'));
-
-    fig3 = figure;
-    ax3 = axes;
-    r3 = colormap(redblue);
-    cbar_handle = colorbar;
-    cbar_handle.TickLabels = string(num2cell(round(linspace(-rangeMapStdAop, rangeMapStdAop, 11),3)));
-    ax3.Visible = 'off';
-    fig3.Color = 'w';
-    testme = export_fig('-transparent');
-    imwrite(testme, strcat(newSam, '-deltaStdAoP-colorbar.tif'));
+%     % compile and save into a video
+% 
+%     vidobj1 = VideoWriter(strcat(newSam, '-deltaAvgDoLP-heatmap.mp4'), 'MPEG-4');
+%     open(vidobj1);
+%     writeVideo(vidobj1, rgbAvgDolpDelta);
+%     close(vidobj1);
+% 
+%     vidobj2 = VideoWriter(strcat(newSam, '-deltaAvgAoP-heatmap.mp4'), 'MPEG-4');
+%     open(vidobj2);
+%     writeVideo(vidobj2, rgbAvgAopDelta);
+%     close(vidobj2);
+% 
+%     vidobj3 = VideoWriter(strcat(newSam, '-deltaStdAoP-heatmap.mp4'), 'MPEG-4');
+%     open(vidobj3);
+%     writeVideo(vidobj3, rgbStdAopDelta);
+%     close(vidobj3);
+% 
+% 
+%     % save colorbar for each video
+%     fig1 = figure;
+%     ax1 = axes;
+%     r1 = colormap(redblue);
+%     cbar_handle = colorbar;
+%     cbar_handle.TickLabels = string(num2cell(round(linspace(-rangeMapDolp, rangeMapDolp, 11),3)));
+%     ax1.Visible = 'off';
+%     fig1.Color = 'w';
+%     testme = export_fig('-transparent');
+%     imwrite(testme, strcat(newSam, '-deltaAvgDoLP-colorbar.tif'));
+% 
+% 
+%     fig2 = figure;
+%     ax2 = axes;
+%     r2 = colormap(redblue);
+%     cbar_handle = colorbar;
+%     cbar_handle.TickLabels = string(num2cell(round(linspace(-rangeMapAvgAop, rangeMapAvgAop, 11),3)));
+%     ax2.Visible = 'off';
+%     fig2.Color = 'w';
+%     testme = export_fig('-transparent');
+%     imwrite(testme, strcat(newSam, '-deltaAvgAoP-colorbar.tif'));
+% 
+%     fig3 = figure;
+%     ax3 = axes;
+%     r3 = colormap(redblue);
+%     cbar_handle = colorbar;
+%     cbar_handle.TickLabels = string(num2cell(round(linspace(-rangeMapStdAop, rangeMapStdAop, 11),3)));
+%     ax3.Visible = 'off';
+%     fig3.Color = 'w';
+%     testme = export_fig('-transparent');
+%     imwrite(testme, strcat(newSam, '-deltaStdAoP-colorbar.tif'));
     
     disp('Videos and colorbar imgs saved');
     %cd(paths);
