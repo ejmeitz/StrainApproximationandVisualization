@@ -2,26 +2,30 @@ function deformedCellArray = deformRight(posBoxCellArray, maxRowLength, rightCla
       deformedCellArray = posBoxCellArray;
       
       initialBoxWidth = posBoxCellArray{1,1,1}(3);
-      startX = getMinX(posBoxCellArray(:,:,1));  %furthest to the left box
-
-       
-       displacementPerFrame(1,1) = 0; %initialize first element 
+      minX = getMinX(posBoxCellArray(:,:,1));  %furthest to the left box
+      
+      
+       displacementPerFrame(1,1) = 0; %initialize first element (first frame always has 0 displacement)
 
       for i = 2:length(rightClampPos)
-          displacementPerFrame(i,1) = rightClampPos(i,1) -  rightClampPos(i-1,1);
+          displacementPerFrame(i,1) = rightClampPos(i,1) -  rightClampPos(i-1,1); %calculate the displacement of a frame relative to the previous frame
       end
       
       
-      for j = 2:size(posBoxCellArray,3) %for each frame calculate new displacemenet array
-            displacement = calcBinIncrement(maxRowLength, displacementPerFrame(j,1));
+      for j = 2:size(posBoxCellArray,3) %loop frames
+            displacement = calcBinIncrement(maxRowLength, displacementPerFrame(j,1)); %distribute the deformation of a single frame across the boxes
+            
+              %need max X so that the displacement array accounts for the total
+    %length not just the longest row so maxrow length is not the right
+    %number to put in there
             
          for r = 1:size(posBoxCellArray,1) %loop through each row and apply the displacement
               currentIndex = 1; %first box in row is always first element but it may be the 10th box in the row if no other boxes exist before it
              for c = 1:size(posBoxCellArray,2)
                  if(~isempty(posBoxCellArray{r,c,j}))
                       if(currentIndex == 1) %if the first box in a row not necessarilly furthest left
-                                startXRow = posBoxCellArray{r,c,j}(1);
-                                startIndex = ((startXRow-startX)/initialBoxWidth) + 1; %plus 1 cause MATLAB starts at 1 
+                                startX_Of_Row = posBoxCellArray{r,c,1}(1); %do relative to first frame because the others will give decimal values
+                                startIndex = ((startX_Of_Row - minX)/initialBoxWidth) + 1; %plus 1 cause MATLAB starts at 1 
                                 currentIndex = startIndex;
                        end 
                     

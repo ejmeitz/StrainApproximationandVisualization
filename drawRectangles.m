@@ -1,9 +1,8 @@
-function drawRectangles(allPosBoxArray, imgXDim, imgYDim)
+function drawRectangles(allPosBoxArray, imgXDim, imgYDim, fps)
 
     frames = [];
     clear('frames');
     name = inputdlg("Choose a file name");
-    fps = 20;
    
     numRows = size(allPosBoxArray,1);   
       numFrames = size(allPosBoxArray,3);

@@ -21,10 +21,9 @@
 %% Change me and Housekeeping
 
 
-%clearvars;clc;
-
-horzPix = 5;
-vertPix = 5;
+%set bin size and scaling factor of s0
+horzPix = 3;
+vertPix = 3;
 scale = 500;
 
 %% load info about files
@@ -53,28 +52,16 @@ scale = 500;
     brush = strel('square',8);
     erodedImg = imerode(binaryImage,brush); %trim edges back a bit more
     
-    filledImg = imfill(binaryImage, 8, 'holes');
+    filledImg = imfill(binaryImage, 8, 'holes'); %fill in holes in mask
     
     c = regionprops(filledImg,'BoundingBox'); %creates bounding box on image 
-    f1 = figure;
-    imshow(filledImg);
-    rectangle('Position',c.BoundingBox, 'EdgeColor', 'r'); %draws red bounding box on image 
+    f1 = figure; 
+    imshow(filledImg); %show mask
+    rectangle('Position',c.BoundingBox, 'EdgeColor', 'r'); %draws bounding box on image 
 
-    %create vector with number of positive elements in each row
-%     rowCount = sum(erodedImg,2); %sums positive elements in each row of image
-%     colCount = sum(erodedImg,1); %sums positive elements in each col of image  %THIS ASSUME REGION IS NOT OBLIQUE AND BREAKS OTHERWISE (e.g. only allows for rectangular regions)
-
-%     maxRow = max(rowCount);  %finds row with most boxes
-%     maxCol = max(colCount); %finds col with most boxes
-% 
-%     maxNumRowBox = ceil(maxRow/horzPix);  %calculates number max number of boxes in each dim
-%     maxNumColBox = ceil(maxCol/vertPix);
-% 
-%     %create array of square ROIs comprising the bounding box
-%     numBox = maxNumRowBox*maxNumColBox;
-
+   
  %create array of square ROIs comprising the bounding box
-     leastX = c.BoundingBox(1);
+    leastX = c.BoundingBox(1);
     greatestX = c.BoundingBox(1) + c.BoundingBox(3);
     leastY = c.BoundingBox(2);
     greatestY = c.BoundingBox(2) + c.BoundingBox(4);
@@ -91,7 +78,7 @@ scale = 500;
     startX = floor(c.BoundingBox(1,1)); %top left
     startY = floor(c.BoundingBox(1,2));
 
-    %if this becomes dynamic will need to base off surrounding boxes
+    %create an array of boxes that will fill the bounding box
     for i = 1:numBox
         boxArray(i,1) = startX +((countX)*horzPix); %x coord of all boxes
         boxArray(i,2) = startY +((countY)*vertPix);  %y coord of all boxes
@@ -119,15 +106,13 @@ scale = 500;
       boxArray(i,5) = sum(subArray, 'all'); %if sum is 0 there is no gel
     end
 
-
-    % create edited array with only boxes containing mask
     close(f2);
     figure;
     imshow(filledImg);
     rectangle('Position',c.BoundingBox, 'EdgeColor', 'r');
     count = 1;
     
-%creates array of boxes that contain gel
+%creates and draws array of boxes that contain gel
     for i =1:numBox
         if boxArray(i,5) > 0  % spot five is 0 if theres no gel
             posBoxArray(count,1:4) = boxArray(i,1:4);  %array of boxes with gel, has to be dynamic cause we dont know how many at start
@@ -139,7 +124,7 @@ scale = 500;
     
     allPosBoxArray = repmat(posBoxArray,[1 1 size(aop,3)]);   
     scaled_s0 = s0./scale;
-    allPosBoxArray = strainApproximation(allPosBoxArray, scaled_s0);  
+    allPosBoxArray = strainApproximation(allPosBoxArray, scaled_s0);  %approximate strain by tracking pins and deforming the boxes accordingly
     
      disp('Deformation Calculated');
     
@@ -153,7 +138,6 @@ scale = 500;
         for i = 1:size(posBoxArray,1)
             %base off undeformed array 
             subDoLP = bDoLPMask(posBoxArray(i,2):(posBoxArray(i,2)+posBoxArray(i,4)-1), posBoxArray(i,1):(posBoxArray(i,1)+posBoxArray(i,3)-1)); %calc 5x5 subDoLP
-           % allPosBoxArray(i,5,j) = mean(subDoLP, 'all'); %avg DoLP value in the box
             allPosBoxArray(i,5,j) = nanmean(subDoLP,'all');
            subAoP = bAoPMask(posBoxArray(i,2):(posBoxArray(i,2)+posBoxArray(i,4)-1), posBoxArray(i,1):(posBoxArray(i,1)+posBoxArray(i,3)-1));
             tmp1 = circ_stats(subAoP.*(2*pi/180));
@@ -252,7 +236,7 @@ scale = 500;
         end
     end    
     
-    drawRectangles(allPosBoxArray,size(s0,2),size(s0,1));
+    drawRectangles(allPosBoxArray,size(s0,2),size(s0,1),20);
     
 %     % compile and save into a video
 % 

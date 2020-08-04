@@ -1,6 +1,6 @@
 function deformedPosBoxArray = strainApproximation(allPosBoxArray, scaled_s0)
 
-    posBoxCellArray = createGrid(allPosBoxArray); %organize box elements by row
+    posBoxCellArray = createGrid(allPosBoxArray); %organize box into rows by y-coord (breaks if boxes are not at a constant y height along a row)
     deformedCellArray = {};
     
     
@@ -12,9 +12,10 @@ function deformedPosBoxArray = strainApproximation(allPosBoxArray, scaled_s0)
     longestRowIndex = getLongestRowIndexFromCellArray(posBoxCellArray);
     initialBoxWidth = posBoxCellArray{1,1,1}(3); 
     initialMinX = getMinX(posBoxCellArray(:,:,1));
-    initialMaxX = maxRowLength*initialBoxWidth + initialMinX;
-    fixedX = 0;
-   
+    initialMaxX = getMaxX(posBoxCellArray(:,:,1));
+    maxWidthByBoxes = ((initialMaxX-initialMinX)/initialBoxWidth) + 1;  %width with dimension of boxes e.g. width = 10 boxes  %plus 1 because boxes are defined by their bottom left so otherwise we off by 1
+    
+    
     %have user create mask and pick circles to track
     [chosenCircles, threshUp, threshDown] = pickCircles(scaled_s0);  %this will assign a variable in base for chosenCircles
     %track those circles throughout the video
@@ -24,17 +25,18 @@ function deformedPosBoxArray = strainApproximation(allPosBoxArray, scaled_s0)
     
     switch(forceLocation)
         case 'right'
-            deformedCellArray = deformRight(posBoxCellArray, maxRowLength, rightClampPos);
+            deformedCellArray = deformRight(posBoxCellArray, maxWidthByBoxes, rightClampPos);
         case 'left'
-            deformedCellArray = deformLeft(posBoxCellArray, maxRowLength, leftClampPos); %just mirror of deformLeft()
+            deformedCellArray = deformLeft(posBoxCellArray, maxWidthByBoxes, leftClampPos); %just mirror of deformLeft()
         case 'both'
             fixedX = findFixed(posBoxCellArray(:,:,1),initialMinX, initialMaxX,size(scaled_s0,1),size(scaled_s0,2));  
-            deformedCellArray = deformBoth(posBoxCellArray, fixedX, maxRowLength, leftClampPos, rightClampPos);
+            deformedCellArray = deformBoth(posBoxCellArray, fixedX, leftClampPos, rightClampPos);
         otherwise
             error("Could not deform cells");
     end
     
     allPosXLength = size(allPosBoxArray,1);
+    %put back into array form so the rest of original script works
     deformedPosBoxArray = cellArrayBackToArray(deformedCellArray, allPosXLength);
     clear deformedCellArray trackedCircleLocations posBoxCellArray;
     return;
