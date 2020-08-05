@@ -1,11 +1,7 @@
 %% regionHeatMapGenerator v1
 % created by Leanne Iannucci
 % 2/1/2020
-% edit log:
 
-%
-%
-%
 
 % objective of this code is to create a script that can input MAT files
 % that have already been analyzed using UCL Analysis, and output dynamic
@@ -22,8 +18,8 @@
 
 
 %set bin size and scaling factor of s0
-horzPix = 3;
-vertPix = 3;
+horzPix = 4;
+vertPix = 4;
 scale = 500;
 
 %% load info about files
@@ -41,7 +37,7 @@ scale = 500;
 %     disp('Loaded File')
 
     %% segment mask into regions
-    addpath('CircStats');
+    addpath('CircStats');  %functions for AoP calcs
 
     %create bounding box for ROI
     q = bwareafilt(maskImg(:,:,1),1);  %get rid of all blobs except the biggest one
@@ -49,7 +45,7 @@ scale = 500;
     dilatedImage = imdilate(q,se);  %dilates image
     binaryImage = imerode(dilatedImage,se);   %erodes image
     
-    brush = strel('square',8);
+    brush = strel('square',8); %new smaller brush
     erodedImg = imerode(binaryImage,brush); %trim edges back a bit more
     
     filledImg = imfill(binaryImage, 8, 'holes'); %fill in holes in mask
@@ -61,15 +57,14 @@ scale = 500;
 
    
  %create array of square ROIs comprising the bounding box
-    leastX = c.BoundingBox(1);
-    greatestX = c.BoundingBox(1) + c.BoundingBox(3);
-    leastY = c.BoundingBox(2);
-    greatestY = c.BoundingBox(2) + c.BoundingBox(4);
+    leastX = c.BoundingBox(1); %x-val at left edge of box
+    greatestX = c.BoundingBox(1) + c.BoundingBox(3);  %x-val at right edge of box
+    leastY = c.BoundingBox(2);  %y-val at bottom of box
+    greatestY = c.BoundingBox(2) + c.BoundingBox(4);  %y-val at top of box
     
-    maxNumRowBox = ceil((greatestX - leastX)/horzPix);
+    maxNumRowBox = ceil((greatestX - leastX)/horzPix); %round up to ensure box is covered
     maxNumColBox = ceil((greatestY - leastY)/vertPix);
     
-   
     numBox = maxNumRowBox*maxNumColBox;
     
     boxArray = zeros(numBox,5);
@@ -102,7 +97,7 @@ scale = 500;
        %value greater than 0
     for i = 1:numBox
       rectangle('Position', boxArray(i,1:4), 'EdgeColor', 'b');
-      subArray = filledImg(boxArray(i,2):(boxArray(i,2)+boxArray(i,4)-1), boxArray(i,1):(boxArray(i,1)+boxArray(i,3)-1));
+      subArray = filledImg(boxArray(i,2):(boxArray(i,2)+ boxArray(i,4)-1), boxArray(i,1):(boxArray(i,1)+ boxArray(i,3)-1));
       boxArray(i,5) = sum(subArray, 'all'); %if sum is 0 there is no gel
     end
 
@@ -190,7 +185,6 @@ scale = 500;
     end
 
     disp('Data converted to RGB');
-    % figure; imagesc(avgAoPHeatMap(:,:,1));figure; imagesc(stdAoPHeatMap(:,:,1));figure; imagesc(avgDoLPHeatMap(:,:,1));
     %% export to a video file
 
     %calculate range for each type
@@ -204,7 +198,7 @@ scale = 500;
     rgbAvgAopDelta = double2rgb(avgAoPHeatMap, redblue, [-rangeMapAvgAop rangeMapAvgAop]);
     rgbStdAopDelta = double2rgb(stdAoPHeatMap, redblue, [-rangeMapStdAop rangeMapStdAop]);
 
-    %take color data from DoLP and put into posBox
+    %take color data from each image and put into posBox
     %rgbAvgDolpDelta(row,col,RGB,frame)
     for i = 1:size(rgbAvgDolpDelta,4)  %loop frames
         row = 1; %at start of new frame reset row count
@@ -236,7 +230,7 @@ scale = 500;
         end
     end    
     
-    drawRectangles(allPosBoxArray,size(s0,2),size(s0,1),20);
+    drawRectangles(allPosBoxArray,size(s0,2),size(s0,1),50);
     
 %     % compile and save into a video
 % 
@@ -295,6 +289,6 @@ scale = 500;
     
     close all
     %waitbar(bigI/numel(files), y);
-    clearvars -except horzPix vertPix files paths newPath bigI y
+    clearvars -except horzPix vertPix files paths newPath bigI y allPosBoxArray scale
     
 %end

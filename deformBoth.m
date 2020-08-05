@@ -26,14 +26,11 @@ function deformedCellArray = deformBoth(posBoxCellArray, fixedX, leftClampPos, r
       for j = 2:size(posBoxCellArray,3) %for each frame calculate new displacemenet array (first frame has no deformation)
                     
         displacementRight = calcBinIncrement(rightBinCount, displacementPerFrameRight(j,1)); %has length = rightBinCount
-         
         displacementLeft = calcBinIncrement(leftBinCount, displacementPerFrameLeft(j,1)); %has length = leftBinCount
         
-       % displacementLeft = flipud(displacementLeft);  %we will still work left to right so flip displacements
-
          for r = 1 : size(posBoxCellArray,1) %loop through each row and apply the displacement
              temp = posBoxCellArray{r,1,1}(1);
-             numBoxToLeftOfFixed = (fixedX - temp)/initialBoxWidth; %this could change with each row
+             numBoxToLeftOfFixed = (fixedX - temp)/initialBoxWidth; %number of boxes in row 'r' to the left of the fixed point
              
              countLeft = 0;
              currentIndexRight = 1;

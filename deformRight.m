@@ -13,25 +13,20 @@ function deformedCellArray = deformRight(posBoxCellArray, maxRowLength, rightCla
       
       
       for j = 2:size(posBoxCellArray,3) %loop frames
-            displacement = calcBinIncrement(maxRowLength, displacementPerFrame(j,1)); %distribute the deformation of a single frame across the boxes
-            
-              %need max X so that the displacement array accounts for the total
-    %length not just the longest row so maxrow length is not the right
-    %number to put in there
-            
+            displacement = calcBinIncrement(maxRowLength, displacementPerFrame(j,1)); %distribute the deformation of a single frame across the boxes         
          for r = 1:size(posBoxCellArray,1) %loop through each row and apply the displacement
-              currentIndex = 1; %first box in row is always first element but it may be the 10th box in the row if no other boxes exist before it
+              currentIndex = 1; %reset index count at start of row
              for c = 1:size(posBoxCellArray,2)
                  if(~isempty(posBoxCellArray{r,c,j}))
                       if(currentIndex == 1) %if the first box in a row not necessarilly furthest left
                                 startX_Of_Row = posBoxCellArray{r,c,1}(1); %do relative to first frame because the others will give decimal values
                                 startIndex = ((startX_Of_Row - minX)/initialBoxWidth) + 1; %plus 1 cause MATLAB starts at 1 
-                                currentIndex = startIndex;
+                                currentIndex = startIndex; %first box in row is always first element in cell array but it may be the 10th box in the row if no other boxes exist before it so we ne
                        end 
                     
                      deformedCellArray{r,c,j}(1) =  deformedCellArray{r,c,j}(1) + sum(displacement(1:currentIndex),1);  %update xloc
                      deformedCellArray{r,c,j}(3) =  deformedCellArray{r,c,j}(3) + displacement(currentIndex,1);    %update width
-                     currentIndex = currentIndex + 1;
+                     currentIndex = currentIndex + 1; %update index
                  end
              end
          end

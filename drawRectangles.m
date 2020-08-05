@@ -15,7 +15,6 @@ function drawRectangles(allPosBoxArray, imgXDim, imgYDim, fps)
                  g =  allPosBoxArray(m,9,h);
                  b =  allPosBoxArray(m,10,h);
                    rectangle('Position', allPosBoxArray(m,1:4,h),'FaceColor',[r g b],'LineStyle','none');
-                  %rectangle('Position', deformedPosBoxArray(m,1:4,h));
              end
           
            set(gca,'color','black');
@@ -50,7 +49,6 @@ function drawRectangles(allPosBoxArray, imgXDim, imgYDim, fps)
                  g =  allPosBoxArray(m,12,h);
                  b =  allPosBoxArray(m,13,h);
                    rectangle('Position', allPosBoxArray(m,1:4,h),'FaceColor',[r g b],'LineStyle','none');
-                  %rectangle('Position', deformedPosBoxArray(m,1:4,h));
              end
           
            set(gca,'color','black');
@@ -86,7 +84,6 @@ function drawRectangles(allPosBoxArray, imgXDim, imgYDim, fps)
                  g =  allPosBoxArray(m,15,h);
                  b =  allPosBoxArray(m,16,h);
                    rectangle('Position', allPosBoxArray(m,1:4,h),'FaceColor',[r g b],'LineStyle','none');
-                  %rectangle('Position', deformedPosBoxArray(m,1:4,h));
              end
           
            set(gca,'color','black');

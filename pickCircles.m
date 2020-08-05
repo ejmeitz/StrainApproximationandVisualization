@@ -1,14 +1,15 @@
-function [chosenCircles, threshUp, threshDown] = pickCircles(s0)    %scaled s0 by 500
+function [chosenCircles, threshUp, threshDown, numCirclesFound] = pickCircles(scaled_s0)    %scaled s0 by 500
 
     %settings
+    numCirclesFound = 0;
     brushSize = 4;
-    minRad = 18;
-    maxRad = 60;
+    minRad = 18; %THESE MUST MATCH VALUES in trackCircles.m
+    maxRad = 60; %for strain beads change the range
     
     brush = strel('disk', brushSize);
     chosenCircles = [];
     
-    img = s0(:,:,1);
+    img = scaled_s0(:,:,1);
     img_erode = imerode(img,brush);
     Iobr = imreconstruct(img_erode,img);
    
@@ -20,6 +21,7 @@ function [chosenCircles, threshUp, threshDown] = pickCircles(s0)    %scaled s0 b
         
       f = figure();
       [centers, radii] = imfindcircles(filled_img, [minRad maxRad]); %find circles
+      numCirclesFound = length(centers);
       imshow(filled_img);
       viscircles(centers,radii); %show circles
 
@@ -84,12 +86,12 @@ function [chosenCircles, threshUp, threshDown] = pickCircles(s0)    %scaled s0 b
 
        %fill in holes in image so circle alg works better 
        noNoise = medfilt2(thresh_img);
-       filled_img = imfill(noNoise,8,'holes');
-      
+       filled_img = imfill(noNoise,4,'holes');
+        
        pickCirclesUI(filled_img);
        return;
     end
-
+   
   return;  
 end
 

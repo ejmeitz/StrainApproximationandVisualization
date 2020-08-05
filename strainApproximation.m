@@ -3,23 +3,18 @@ function deformedPosBoxArray = strainApproximation(allPosBoxArray, scaled_s0)
     posBoxCellArray = createGrid(allPosBoxArray); %organize box into rows by y-coord (breaks if boxes are not at a constant y height along a row)
     deformedCellArray = {};
     
-    
-    sizeArray = size(posBoxCellArray(:,:,1));
-    maxI = sizeArray(1);
-    maxJ = sizeArray(2);
-    
-    maxRowLength = maxJ; %longest row is the num of cols
-    longestRowIndex = getLongestRowIndexFromCellArray(posBoxCellArray);
     initialBoxWidth = posBoxCellArray{1,1,1}(3); 
-    initialMinX = getMinX(posBoxCellArray(:,:,1));
-    initialMaxX = getMaxX(posBoxCellArray(:,:,1));
+    initialMinX = getMinX(posBoxCellArray(:,:,1)); %minimum x from first frame (before deformation occurs)
+    initialMaxX = getMaxX(posBoxCellArray(:,:,1)); %maximum x from first frame (before deformation occurs)
     maxWidthByBoxes = ((initialMaxX-initialMinX)/initialBoxWidth) + 1;  %width with dimension of boxes e.g. width = 10 boxes  %plus 1 because boxes are defined by their bottom left so otherwise we off by 1
     
     
     %have user create mask and pick circles to track
-    [chosenCircles, threshUp, threshDown] = pickCircles(scaled_s0);  %this will assign a variable in base for chosenCircles
+    [chosenCircles, threshUp, threshDown, numCirclesFound] = pickCircles(scaled_s0);  %this will assign a variable in base for chosenCircles
     %track those circles throughout the video
-    trackedCircleLocations = trackCircles(scaled_s0, threshUp, threshDown, chosenCircles);
+    [trackedCircleLocations, circleFrames] = trackCircles(scaled_s0, threshUp, threshDown, chosenCircles, numCirclesFound);
+    assignin('base', 'circleFrames', circleFrames);
+    
     %figure out where force is applied based on those circles movements
     [forceLocation, leftClampPos, rightClampPos] = deduceForceLocation(trackedCircleLocations);
     
