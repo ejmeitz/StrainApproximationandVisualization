@@ -3,6 +3,17 @@
 % 2/1/2020
 
 
+%Ethan's Notes on How to Use:
+%When picking circles  the perimeter of the circle is most important. Pick
+%the two circles on opposite sides you wish to track and only focus on
+%making the mask good for those. Try to avoid any large blobs sticking off
+%the edge. Any salt and pepper noise will be removed and any holes inside the circle will
+%be filled.
+%
+%
+%
+
+
 % objective of this code is to create a script that can input MAT files
 % that have already been analyzed using UCL Analysis, and output dynamic
 % heatmaps about relative changes in AVG DoLP, AVG AoP and STD AoP compared
@@ -18,8 +29,8 @@
 
 
 %set bin size and scaling factor of s0
-horzPix = 4;
-vertPix = 4;
+horzPix = 6;
+vertPix = 6;
 scale = 500;
 
 %% load info about files

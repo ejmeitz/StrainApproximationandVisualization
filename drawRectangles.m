@@ -7,8 +7,9 @@ function drawRectangles(allPosBoxArray, imgXDim, imgYDim, fps)
     numRows = size(allPosBoxArray,1);   
       numFrames = size(allPosBoxArray,3);
     
+      %sometimes these parfor get stalled at like 75% i have no idea why
     updateWaitbar = waitbarParfor(numFrames, "Drawing Rectangles for AvgDoLP");
-        parfor h = 1:(numFrames)
+        for h = 1:(numFrames)
         f = figure;
              for m = 1:numRows
                  r =  allPosBoxArray(m,8,h);

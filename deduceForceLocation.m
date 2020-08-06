@@ -1,27 +1,27 @@
-function [forceLocation, leftClampPos, rightClampPos] = deduceForceLocation(trackedCircles)
+function [forceLocation, leftClampPos, rightClampPos] = deduceForceLocation(trackedCircleLocations)
     
     forceLocation = 'both';
 
-    zDim = size(trackedCircles,3);
+    zDim = size(trackedCircleLocations,2);
     xlocs1 = zeros(zDim,1);
     xlocs2 = zeros(zDim,1);
-
+    leftClampPos = zeros(zDim,1);
+    rightClampPos = zeros(zDim,1);
+    
     for i = 1:zDim
-        xlocs1(i,1) = trackedCircles(1,1,i);
-        xlocs2(i,1) = trackedCircles(2,1,i);    
+        xlocs1(i,1) = trackedCircleLocations(1,i);
+        xlocs2(i,1) = trackedCircleLocations(2,i);    
     end
     
         
     %figure out which clamp is the left/right
-      leftClampPos = [];
-      rightClampPos = [];
       if(xlocs1(1,1) < xlocs2(1,1))
-          leftClampPos = xlocs1;
-          rightClampPos = xlocs2;
+          leftClampPos(:,1) = xlocs1(:,1);
+          rightClampPos(:,1) = xlocs2(:,1);
           
       else
-          leftClampPos = xlocs2;
-          rightClampPos = xlocs1;
+          leftClampPos(:,1) = xlocs2(:,1);
+          rightClampPos(:,1) = xlocs1(:,1);
       end
       
       filledLeft = filloutliers(leftClampPos,'makima','gesd');

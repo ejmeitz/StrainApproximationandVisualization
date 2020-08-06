@@ -5,12 +5,12 @@ function [trackedCircleLocations, circleFrames] = trackCircles  (scaled_s0, thre
     clear('circleFrames');
     %these settings must match settings in "pickCircles.m"
     brushSize = 4;
-    minRad = 18;
+    minRad = 18;  %for strain beads use smaller dimensions
     maxRad = 60;
     
     brush = strel('disk', brushSize);
 
-    trackedCircleLocations = ones(2,2,size(scaled_s0,3));
+    trackedCircleLocations = ones(2,size(scaled_s0,3));
     updateWaitbar = waitbarParfor(size(scaled_s0,3), "Tracking Circles");
     
     f = figure(1);
@@ -96,9 +96,8 @@ function [trackedCircleLocations, circleFrames] = trackCircles  (scaled_s0, thre
             end
         end
         
-        
-        temp = [centers(closestIndex1, 1) , centers(closestIndex2, 1)];
-        trackedCircleLocations(:,1,i) = temp; %this way works with parfor 
+        trackedCircleLocations(1,i) = centers(closestIndex1, 1);
+        trackedCircleLocations(2,i) = centers(closestIndex2, 1); %this way works with parfor 
         
        updateWaitbar();
     end
