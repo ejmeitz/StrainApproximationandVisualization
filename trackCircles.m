@@ -31,6 +31,9 @@ function [trackedCircleLocations, circleFrames] = trackCircles  (scaled_s0, thre
         
         imshow(Iobr);
         viscircles(centers,radii); %show circles
+        hold on;
+        plot(centers(:,1),centers(:,2),'r*');
+        
         circleFrames(i) = getframe(f);
         clf(f);
         
@@ -44,8 +47,10 @@ function [trackedCircleLocations, circleFrames] = trackCircles  (scaled_s0, thre
            currentClosest2 = Inf;
         for j = 1:length(centers)
           
-           dist1 = abs(centers(j,1) - chosenCircles(1,1)); %calculate x-distance to chosen circles
-           dist2 = abs(centers(j,1) - chosenCircles(2,1));
+           dist1 = sqrt((centers(j,1) - chosenCircles(1,1))^2) + ((centers(j,2) - chosenCircles(1,2))^2);
+           dist2 = sqrt((centers(j,1) - chosenCircles(1,1))^2) + ((centers(j,2) - chosenCircles(2,2))^2);
+          % dist1 = (centers(j,1) - chosenCircles(1,1)); %calculate distance to chosen circles
+          % dist2 = (centers(j,1) - chosenCircles(2,1));
           
            if(dist1 < currentClosest1)  %comapre x-distance with current closest distance
                closestIndex1 = j;
@@ -71,6 +76,8 @@ function [trackedCircleLocations, circleFrames] = trackCircles  (scaled_s0, thre
             
             imshow(Iobr);
             viscircles(centers,radii); 
+            hold on;
+            plot(centers(:,1),centers(:,2),'r*');
             circleFrames(i) = getframe(f); %change frame to new choice
             clf(f);
             
@@ -81,10 +88,10 @@ function [trackedCircleLocations, circleFrames] = trackCircles  (scaled_s0, thre
                 currentClosest2 = Inf;
             for j = 1:length(centers)
 
-               dist1 = abs(centers(j,1) - chosenCircles(1,1)); %calculate x-distance to chosen circles
-               dist2 = abs(centers(j,1) - chosenCircles(2,1));
+              dist1 = sqrt((centers(j,1) - chosenCircles(1,1))^2) + ((centers(j,2) - chosenCircles(1,2))^2); %cannot just compare x-vals 
+              dist2 = sqrt((centers(j,1) - chosenCircles(1,1))^2) + ((centers(j,2) - chosenCircles(2,2))^2);
 
-               if(dist1 < currentClosest1)  %comapre x-distance with current closest distance
+               if(dist1 < currentClosest1) %update current closest
                    closestIndex1 = j;
                    currentClosest1 = dist1;
                end
