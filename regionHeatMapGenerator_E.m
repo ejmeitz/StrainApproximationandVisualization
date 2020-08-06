@@ -10,8 +10,10 @@
 %the edge. Any salt and pepper noise will be removed and any holes inside the circle will
 %be filled.
 %
-%
-%
+%If the mask is bad from the start it will always be bad
+%If the circles in the initial mask are clear and do not have blobs near
+%them it should work for the whole thing. You can run strainApproximation()
+%step by step and view the outputs to debug.
 
 
 % objective of this code is to create a script that can input MAT files
@@ -29,9 +31,10 @@
 
 
 %set bin size and scaling factor of s0
-horzPix = 6;
-vertPix = 6;
+horzPix = 3;
+vertPix = 3;
 scale = 500;
+fps = 25;
 
 %% load info about files
 % addpath(genpath('Y:\Active\Iannucci\Science\Tissue Analogs'))
@@ -241,7 +244,7 @@ scale = 500;
         end
     end    
     
-    drawRectangles(allPosBoxArray,size(s0,2),size(s0,1),50);
+    drawRectangles(allPosBoxArray,size(s0,2),size(s0,1),fps);
     
 %     % compile and save into a video
 % 

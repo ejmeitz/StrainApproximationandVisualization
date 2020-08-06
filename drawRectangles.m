@@ -43,7 +43,7 @@ function drawRectangles(allPosBoxArray, imgXDim, imgYDim, fps)
     clear('frames');
     
       updateWaitbar = waitbarParfor(numFrames, "Drawing Rectangles for AvgAoP");
-        parfor h = 1:(numFrames)
+        for h = 1:(numFrames)
         f = figure;
              for m = 1:numRows
                  r =  allPosBoxArray(m,11,h);
@@ -78,7 +78,7 @@ function drawRectangles(allPosBoxArray, imgXDim, imgYDim, fps)
     
     
       updateWaitbar = waitbarParfor(numFrames, "Drawing Rectangles for StdAoP");
-        parfor h = 1:(numFrames)
+        for h = 1:(numFrames)
         f = figure;
              for m = 1:numRows
                  r =  allPosBoxArray(m,14,h);
